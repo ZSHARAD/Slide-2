@@ -1,441 +1,120 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>3D Hologram Viva Q&A - Light Version</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(ellipse at center, #0a0e27 0%, #000000 100%);
+    overflow: hidden;
+    font-family: 'Arial Black', 'Segoe UI', sans-serif;
+  }
 
-        body {
-            background: #e8edf5;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
-            padding: 20px;
-        }
+  .hologram-container {
+    perspective: 1000px;
+  }
 
-        .slide-wrapper {
-            width: 1400px;
-            max-width: 100%;
-            perspective: 1400px;
-        }
+  .hologram-text {
+    font-size: 6rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    position: relative;
+    color: #ffffff;
+    text-align: center;
+    transform-style: preserve-3d;
+    animation: float 4s ease-in-out infinite, flicker 3s infinite;
 
-        .holo-slide {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(30px) saturate(1.5);
-            border-radius: 50px;
-            padding: 45px 55px 50px;
-            border: 1px solid rgba(0, 150, 255, 0.15);
-            box-shadow: 
-                0 0 80px rgba(0, 150, 255, 0.06),
-                0 0 160px rgba(100, 0, 255, 0.04),
-                inset 0 0 80px rgba(0, 200, 255, 0.02),
-                0 20px 60px rgba(0, 0, 0, 0.04);
-            transform: rotateX(1.5deg) rotateY(0.5deg);
-            transition: transform 0.5s ease;
-            position: relative;
-            overflow: hidden;
-        }
+    /* Core holographic gradient */
+    background: linear-gradient(
+      180deg,
+      #00fff2 0%,
+      #00c2ff 25%,
+      #6a00ff 50%,
+      #ff00e6 75%,
+      #00fff2 100%
+    );
+    background-size: 100% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 
-        .holo-slide:hover {
-            transform: rotateX(0deg) rotateY(0deg);
-        }
+    /* Layered glow for depth */
+    filter: drop-shadow(0 0 10px rgba(0, 255, 242, 0.8))
+            drop-shadow(0 0 25px rgba(106, 0, 255, 0.6))
+            drop-shadow(0 0 45px rgba(255, 0, 230, 0.4));
 
-        /* Animated border - light version */
-        .border-glow {
-            position: absolute;
-            inset: -2px;
-            border-radius: 52px;
-            background: conic-gradient(
-                from 0deg,
-                transparent 0%,
-                rgba(0, 150, 255, 0.25) 15%,
-                rgba(168, 85, 247, 0.2) 35%,
-                rgba(0, 200, 255, 0.25) 55%,
-                rgba(168, 85, 247, 0.2) 75%,
-                transparent 100%
-            );
-            z-index: 0;
-            animation: spinBorder 15s linear infinite;
-            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-            mask-composite: exclude;
-            -webkit-mask-composite: xor;
-            padding: 2px;
-        }
+    animation: float 4s ease-in-out infinite,
+               gradientShift 5s linear infinite,
+               flicker 3.5s infinite;
+  }
 
-        @keyframes spinBorder {
-            to { transform: rotate(360deg); }
-        }
+  /* 3D depth layers behind main text (creates the "hologram slab" look) */
+  .hologram-text::before,
+  .hologram-text::after {
+    content: attr(data-text);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    background: linear-gradient(180deg, #00fff2, #6a00ff, #ff00e6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    z-index: -1;
+  }
 
-        /* Scanlines - very subtle */
-        .scanlines {
-            position: absolute;
-            inset: 0;
-            z-index: 1;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent 0px,
-                transparent 3px,
-                rgba(0, 150, 255, 0.015) 3px,
-                rgba(0, 150, 255, 0.015) 4px
-            );
-            animation: scanMove 10s linear infinite;
-        }
+  .hologram-text::before {
+    transform: translateZ(-15px);
+    opacity: 0.5;
+    filter: blur(2px);
+  }
 
-        @keyframes scanMove {
-            0% { transform: translateY(-100%); }
-            100% { transform: translateY(100%); }
-        }
+  .hologram-text::after {
+    transform: translateZ(-30px);
+    opacity: 0.25;
+    filter: blur(5px);
+  }
 
-        .slide-content {
-            position: relative;
-            z-index: 5;
-        }
+  /* Scanline overlay for authentic holographic feel */
+  .hologram-text::marker { display: none; }
 
-        /* ===== HEADER ===== */
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 32px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(0, 100, 200, 0.08);
-        }
+  .scanlines {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: repeating-linear-gradient(
+      0deg,
+      rgba(0, 255, 242, 0.03) 0px,
+      rgba(0, 255, 242, 0.03) 1px,
+      transparent 2px,
+      transparent 4px
+    );
+    pointer-events: none;
+  }
 
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
+  @keyframes float {
+    0%, 100% { transform: rotateX(8deg) rotateY(-4deg) translateY(0px); }
+    50% { transform: rotateX(4deg) rotateY(4deg) translateY(-12px); }
+  }
 
-        .header-left h1 {
-            font-size: 38px;
-            font-weight: 800;
-            background: linear-gradient(135deg, #1a73e8, #7c3aed, #1a73e8);
-            background-size: 200% 200%;
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            animation: gradShift 5s ease-in-out infinite;
-            letter-spacing: 1px;
-        }
+  @keyframes gradientShift {
+    0% { background-position: 0% 0%; }
+    100% { background-position: 0% 300%; }
+  }
 
-        @keyframes gradShift {
-            0%, 100% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-        }
-
-        .badge {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1a56a0;
-            background: rgba(0, 100, 200, 0.06);
-            border: 1px solid rgba(0, 100, 200, 0.12);
-            padding: 6px 20px;
-            border-radius: 30px;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-        }
-
-        .holo-symbol {
-            font-size: 32px;
-            opacity: 0.2;
-            color: #1a73e8;
-            animation: pulseSym 4s ease-in-out infinite;
-        }
-
-        @keyframes pulseSym {
-            0%, 100% { opacity: 0.15; transform: scale(1) rotate(0deg); }
-            50% { opacity: 0.5; transform: scale(1.1) rotate(10deg); }
-        }
-
-        /* ===== Q&A GRID ===== */
-        .qa-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 24px;
-        }
-
-        .qa-card {
-            background: rgba(255, 255, 255, 0.6);
-            border-radius: 28px;
-            padding: 26px 30px 28px;
-            border: 1px solid rgba(0, 100, 200, 0.06);
-            transition: all 0.4s ease;
-            backdrop-filter: blur(4px);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
-        }
-
-        .qa-card:hover {
-            border-color: rgba(0, 100, 200, 0.2);
-            background: rgba(255, 255, 255, 0.85);
-            transform: translateY(-4px);
-            box-shadow: 0 12px 50px rgba(0, 50, 150, 0.06);
-        }
-
-        .qa-card.highlight {
-            background: rgba(0, 100, 200, 0.03);
-            border-color: rgba(0, 100, 200, 0.08);
-        }
-
-        .qa-number {
-            font-size: 13px;
-            font-weight: 700;
-            color: rgba(0, 100, 200, 0.3);
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            font-family: 'Courier New', monospace;
-            margin-bottom: 6px;
-        }
-
-        .qa-question {
-            font-size: 22px;
-            font-weight: 700;
-            color: #0a1e3c;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            line-height: 1.3;
-        }
-
-        .qa-question .icon {
-            font-size: 24px;
-            opacity: 0.7;
-            flex-shrink: 0;
-        }
-
-        .qa-answer {
-            font-size: 17px;
-            line-height: 1.7;
-            color: #1a304a;
-            font-weight: 400;
-        }
-
-        .qa-answer strong {
-            color: #1a5fc7;
-            font-weight: 600;
-        }
-
-        .qa-answer .highlight-text {
-            color: #c77d1a;
-            font-weight: 500;
-        }
-
-        /* Full width card */
-        .qa-card.full {
-            grid-column: 1 / -1;
-            background: rgba(124, 58, 237, 0.02);
-            border-color: rgba(124, 58, 237, 0.06);
-        }
-
-        /* ===== FOOTER ===== */
-        .footer {
-            margin-top: 32px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(0, 100, 200, 0.06);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .footer-tag {
-            font-size: 12px;
-            color: rgba(0, 80, 180, 0.3);
-            letter-spacing: 3px;
-            font-weight: 300;
-            font-family: 'Courier New', monospace;
-        }
-
-        .footer-tag span {
-            color: rgba(124, 58, 237, 0.35);
-        }
-
-        .dots {
-            display: flex;
-            gap: 8px;
-        }
-
-        .dots .dot {
-            width: 7px;
-            height: 7px;
-            border-radius: 50%;
-            background: rgba(0, 100, 200, 0.15);
-            transition: 0.3s;
-        }
-
-        .dots .dot.active {
-            background: rgba(0, 100, 200, 0.4);
-            width: 24px;
-            border-radius: 4px;
-            box-shadow: 0 0 20px rgba(0, 100, 200, 0.08);
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .qa-grid {
-                grid-template-columns: 1fr;
-                gap: 18px;
-            }
-            .holo-slide {
-                padding: 30px 28px 35px;
-            }
-            .header-left h1 {
-                font-size: 28px;
-            }
-            .qa-question {
-                font-size: 19px;
-            }
-            .qa-answer {
-                font-size: 15px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .holo-slide {
-                padding: 18px 14px 22px;
-                border-radius: 28px;
-            }
-            .header-left h1 {
-                font-size: 20px;
-            }
-            .badge {
-                font-size: 9px;
-                padding: 4px 12px;
-            }
-            .qa-question {
-                font-size: 16px;
-            }
-            .qa-answer {
-                font-size: 13px;
-                line-height: 1.5;
-            }
-            .qa-card {
-                padding: 18px 16px 20px;
-            }
-            .footer-tag {
-                font-size: 9px;
-            }
-        }
-    </style>
+  @keyframes flicker {
+    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
+    20%, 22%, 24%, 55% { opacity: 0.85; }
+  }
+</style>
 </head>
 <body>
-
-<div class="slide-wrapper">
-    <div class="holo-slide">
-
-        <!-- Animated Border -->
-        <div class="border-glow"></div>
-        <!-- Scanlines -->
-        <div class="scanlines"></div>
-
-        <div class="slide-content">
-
-            <!-- HEADER -->
-            <div class="header">
-                <div class="header-left">
-                    <h1>✦ Viva Q&A</h1>
-                    <span class="badge">AI Project Cycle</span>
-                </div>
-                <div class="holo-symbol">◈</div>
-            </div>
-
-            <!-- Q&A GRID -->
-            <div class="qa-grid">
-
-                <!-- Q1 -->
-                <div class="qa-card highlight">
-                    <div class="qa-number">Q1</div>
-                    <div class="qa-question">
-                        <span class="icon">⚡</span> What is AI Project Cycle?
-                    </div>
-                    <div class="qa-answer">
-                        A structured <strong>6-step approach</strong>: <br/>
-                        Problem Definition → Data Collection → Data Exploration → <br/>
-                        AI Modeling → Prediction & Evaluation → Continuous Improvement. <br/>
-                        It's a <strong>cyclical process</strong> that repeats for better results.
-                    </div>
-                </div>
-
-                <!-- Q2 -->
-                <div class="qa-card">
-                    <div class="qa-number">Q2</div>
-                    <div class="qa-question">
-                        <span class="icon">📊</span> Why is data important?
-                    </div>
-                    <div class="qa-answer">
-                        Quality data is the <strong>foundation</strong> of accurate AI models. <br/>
-                        <span class="highlight-text">Good data</span> → reliable predictions &amp; meaningful insights. <br/>
-                        <strong>Garbage in = Garbage out!</strong> <br/>
-                        More data + better quality = <strong>Better predictions</strong>.
-                    </div>
-                </div>
-
-                <!-- Q3 -->
-                <div class="qa-card">
-                    <div class="qa-number">Q3</div>
-                    <div class="qa-question">
-                        <span class="icon">🧠</span> What is modelling?
-                    </div>
-                    <div class="qa-answer">
-                        Creating a <strong>machine learning algorithm</strong> that learns <br/>
-                        patterns from historical data to make <strong>predictions</strong> on new data. <br/>
-                        Algorithms: Neural Networks, XGBoost, Decision Trees <br/>
-                        to identify <strong>student stress factors</strong>.
-                    </div>
-                </div>
-
-                <!-- Q4 -->
-                <div class="qa-card highlight">
-                    <div class="qa-number">Q4</div>
-                    <div class="qa-question">
-                        <span class="icon">🎯</span> Why evaluate the model?
-                    </div>
-                    <div class="qa-answer">
-                        Ensures AI is <strong>accurate, fair, and reliable</strong> before deployment. <br/>
-                        Helps identify errors, measure performance, <br/>
-                        collect feedback, and make <strong>continuous improvements</strong> <br/>
-                        for better real-world results.
-                    </div>
-                </div>
-
-                <!-- Q5 - Full Width -->
-                <div class="qa-card full">
-                    <div class="qa-number">Q5</div>
-                    <div class="qa-question">
-                        <span class="icon">💙</span> How can AI reduce student stress?
-                    </div>
-                    <div class="qa-answer">
-                        <strong>Early detection</strong> of stress patterns · <strong>Personalized recommendations</strong> · <br/>
-                        <strong>Automated support</strong> via apps · <strong>Timely interventions</strong> by counselors · <br/>
-                        <strong>Continuous monitoring</strong>. AI provides <span class="highlight-text">data-driven insights</span> for <strong>preventive care</strong>.
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- FOOTER -->
-            <div class="footer">
-                <span class="footer-tag">◈ <span>HOLO</span> · 3D · AI STRESS MANAGEMENT</span>
-                <div class="dots">
-                    <span class="dot active"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                    <span class="dot"></span>
-                </div>
-            </div>
-
-        </div><!-- /slide-content -->
-    </div><!-- /holo-slide -->
-</div><!-- /slide-wrapper -->
-
+  <div class="hologram-container">
+    <h1 class="hologram-text" data-text="AI PROJECT CYCLE">AI PROJECT CYCLE</h1>
+  </div>
+  <div class="scanlines"></div>
 </body>
 </html>
