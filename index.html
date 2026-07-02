@@ -3,209 +3,467 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Hologram 3D - Student Stress Management</title>
+    <title>3D Hologram Viva Q&A - AI Project Cycle</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            background: #0a0a0f;
+            background: #06080f;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
+            overflow: hidden;
         }
-        .holo-card {
-            width: 520px;
-            background: rgba(10, 20, 40, 0.3);
-            backdrop-filter: blur(8px);
-            border-radius: 40px;
-            padding: 30px;
-            box-shadow: 0 0 60px rgba(0, 180, 255, 0.15),
-                        0 0 120px rgba(100, 0, 255, 0.08);
-            border: 1px solid rgba(0, 200, 255, 0.15);
-            transition: transform 0.3s ease;
-        }
-        .holo-card:hover {
-            transform: perspective(800px) rotateX(2deg) rotateY(4deg);
-        }
-        svg {
+
+        /* Animated background particles */
+        .bg-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
-            display: block;
-            border-radius: 28px;
-            filter: drop-shadow(0 0 30px rgba(0, 150, 255, 0.2));
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            background: 
+                radial-gradient(ellipse at 20% 50%, rgba(0, 180, 255, 0.04) 0%, transparent 60%),
+                radial-gradient(ellipse at 80% 50%, rgba(168, 85, 247, 0.04) 0%, transparent 60%);
         }
-        .caption {
-            text-align: center;
-            margin-top: 18px;
-            color: rgba(160, 210, 255, 0.5);
-            font-size: 13px;
+
+        .slide-container {
+            position: relative;
+            z-index: 1;
+            width: 1300px;
+            max-width: 95vw;
+            padding: 30px;
+            perspective: 1200px;
+        }
+
+        /* Main holographic slide */
+        .holo-slide {
+            background: rgba(8, 18, 40, 0.55);
+            backdrop-filter: blur(24px) saturate(1.4);
+            border-radius: 48px;
+            padding: 40px 50px 45px;
+            border: 1px solid rgba(0, 200, 255, 0.12);
+            box-shadow: 
+                0 0 80px rgba(0, 150, 255, 0.06),
+                0 0 160px rgba(100, 0, 255, 0.04),
+                inset 0 0 80px rgba(0, 200, 255, 0.02);
+            transform: rotateX(2deg) rotateY(-1deg);
+            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .holo-slide:hover {
+            transform: rotateX(0deg) rotateY(0deg) scale(1.002);
+        }
+
+        /* Holographic scanline overlay */
+        .scanlines {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent,
+                transparent 2px,
+                rgba(0, 200, 255, 0.015) 2px,
+                rgba(0, 200, 255, 0.015) 4px
+            );
+            z-index: 10;
+            animation: scanMove 8s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(100%); }
+        }
+
+        /* Animated glow border */
+        .glow-border {
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            width: calc(100% + 4px);
+            height: calc(100% + 4px);
+            border-radius: 50px;
+            background: conic-gradient(
+                from 0deg,
+                transparent 0%,
+                rgba(0, 200, 255, 0.15) 20%,
+                rgba(168, 85, 247, 0.15) 40%,
+                rgba(0, 200, 255, 0.15) 60%,
+                rgba(168, 85, 247, 0.15) 80%,
+                transparent 100%
+            );
+            z-index: 0;
+            animation: borderSpin 12s linear infinite;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            -webkit-mask-composite: xor;
+            padding: 2px;
+        }
+
+        @keyframes borderSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .slide-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Header */
+        .slide-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+            padding-bottom: 18px;
+            border-bottom: 1px solid rgba(0, 200, 255, 0.08);
+        }
+
+        .slide-title {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .slide-title h1 {
+            font-size: 32px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #60b0ff, #a855f7, #60b0ff);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: gradShift 4s ease-in-out infinite;
+            letter-spacing: 2px;
+        }
+
+        @keyframes gradShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .slide-title .badge {
+            font-size: 11px;
+            font-weight: 600;
+            color: #7ab8d4;
+            background: rgba(0, 200, 255, 0.08);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            padding: 4px 14px;
+            border-radius: 20px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .hologram-icon {
+            font-size: 28px;
+            opacity: 0.5;
+            animation: pulseIcon 3s ease-in-out infinite;
+        }
+
+        @keyframes pulseIcon {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.1); }
+        }
+
+        /* Q&A Grid */
+        .qa-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .qa-card {
+            background: rgba(10, 30, 60, 0.3);
+            border-radius: 24px;
+            padding: 22px 26px 24px;
+            border: 1px solid rgba(0, 200, 255, 0.06);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(4px);
+        }
+
+        .qa-card:hover {
+            border-color: rgba(0, 200, 255, 0.2);
+            background: rgba(10, 40, 80, 0.35);
+            transform: translateY(-3px) scale(1.005);
+            box-shadow: 0 8px 40px rgba(0, 150, 255, 0.06);
+        }
+
+        .qa-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, rgba(0, 200, 255, 0.2), transparent);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .qa-card:hover::before {
+            opacity: 1;
+        }
+
+        /* Holographic number */
+        .qa-number {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(0, 200, 255, 0.25);
             letter-spacing: 3px;
             text-transform: uppercase;
+            margin-bottom: 4px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .qa-question {
+            font-size: 18px;
+            font-weight: 600;
+            color: #b0daff;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .qa-question .q-icon {
+            font-size: 20px;
+            opacity: 0.5;
+        }
+
+        .qa-answer {
+            font-size: 15px;
+            line-height: 1.6;
+            color: rgba(180, 210, 240, 0.8);
             font-weight: 300;
         }
-        .caption span {
-            color: rgba(100, 200, 255, 0.8);
+
+        .qa-answer strong {
+            color: rgba(100, 200, 255, 0.9);
+            font-weight: 500;
+        }
+
+        /* Special highlight cards */
+        .qa-card.highlight {
+            background: rgba(0, 200, 255, 0.04);
+            border-color: rgba(0, 200, 255, 0.1);
+        }
+
+        .qa-card.highlight .qa-question {
+            color: #80d0ff;
+        }
+
+        /* Footer */
+        .slide-footer {
+            margin-top: 28px;
+            padding-top: 18px;
+            border-top: 1px solid rgba(0, 200, 255, 0.06);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slide-footer .left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .slide-footer .tag {
+            font-size: 11px;
+            color: rgba(0, 200, 255, 0.3);
+            letter-spacing: 2px;
+            font-weight: 300;
+            font-family: 'Courier New', monospace;
+        }
+
+        .slide-footer .tag span {
+            color: rgba(168, 85, 247, 0.4);
+        }
+
+        .progress-dots {
+            display: flex;
+            gap: 6px;
+        }
+
+        .progress-dots .dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(0, 200, 255, 0.15);
+            transition: all 0.3s;
+        }
+
+        .progress-dots .dot.active {
+            background: rgba(0, 200, 255, 0.5);
+            box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
+            width: 20px;
+            border-radius: 3px;
+        }
+
+        .progress-dots .dot:hover {
+            background: rgba(0, 200, 255, 0.3);
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .qa-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .holo-slide {
+                padding: 28px 24px 32px;
+            }
+            .slide-title h1 {
+                font-size: 24px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .slide-title h1 {
+                font-size: 18px;
+                letter-spacing: 0;
+            }
+            .qa-question {
+                font-size: 15px;
+            }
+            .qa-answer {
+                font-size: 13px;
+            }
+            .holo-slide {
+                padding: 18px 14px 22px;
+                border-radius: 28px;
+            }
+        }
+
+        /* Floating 3D particles */
+        .particle-3d {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            background: radial-gradient(circle, rgba(0, 200, 255, 0.1), transparent);
+            animation: floatParticle 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translate(0, 0) scale(1); opacity: 0.1; }
+            100% { transform: translate(40px, -30px) scale(1.5); opacity: 0.3; }
         }
     </style>
 </head>
 <body>
-    <div class="holo-card">
-        <svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <!-- Holographic gradients -->
-                <linearGradient id="holoBg" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#0b1a33" stop-opacity="0.9"/>
-                    <stop offset="50%" stop-color="#142b4a" stop-opacity="0.7"/>
-                    <stop offset="100%" stop-color="#0a1226" stop-opacity="0.95"/>
-                </linearGradient>
-                <linearGradient id="cyanPulse" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.6"/>
-                    <stop offset="50%" stop-color="#7b2ffc" stop-opacity="0.4"/>
-                    <stop offset="100%" stop-color="#00d4ff" stop-opacity="0.1"/>
-                </linearGradient>
-                <linearGradient id="purpleHolo" x1="0%" y1="100%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#a855f7" stop-opacity="0.5"/>
-                    <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.3"/>
-                    <stop offset="100%" stop-color="#ec4899" stop-opacity="0.2"/>
-                </linearGradient>
-                <linearGradient id="stressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" stop-color="#f472b6" stop-opacity="0.8"/>
-                    <stop offset="50%" stop-color="#facc15" stop-opacity="0.6"/>
-                    <stop offset="100%" stop-color="#34d399" stop-opacity="0.4"/>
-                </linearGradient>
+    <div class="bg-particles"></div>
 
-                <!-- Glow filters -->
-                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
-                    <feGaussianBlur stdDeviation="6" result="blur"/>
-                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                </filter>
-                <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
-                    <feGaussianBlur stdDeviation="12" result="blur"/>
-                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
-                </filter>
-                <filter id="hologramFlicker">
-                    <feTurbulence type="fractalNoise" baseFrequency="0.03 0.06" numOctaves="3" result="noise"/>
-                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
-                </filter>
+    <div class="slide-container">
+        <div class="holo-slide">
+            <!-- Glow border -->
+            <div class="glow-border"></div>
+            <!-- Scanlines -->
+            <div class="scanlines"></div>
 
-                <!-- 3D perspective -->
-                <filter id="perspective3d">
-                    <feConvolveMatrix order="3" kernelMatrix="0 0 0 0 0.8 0 0 0 0" />
-                </filter>
-            </defs>
+            <!-- 3D floating particles -->
+            <div class="particle-3d" style="width:300px;height:300px;top:-80px;right:-60px;animation-delay:0s;"></div>
+            <div class="particle-3d" style="width:200px;height:200px;bottom:-40px;left:-30px;animation-delay:6s;background:radial-gradient(circle,rgba(168,85,247,0.08),transparent);"></div>
 
-            <!-- Background -->
-            <rect width="800" height="900" rx="32" fill="url(#holoBg)"/>
+            <div class="slide-content">
+                <!-- Header -->
+                <div class="slide-header">
+                    <div class="slide-title">
+                        <h1>✦ Viva Q&A</h1>
+                        <span class="badge">AI Project Cycle</span>
+                    </div>
+                    <div class="hologram-icon">◈</div>
+                </div>
 
-            <!-- Animated holographic scanlines -->
-            <g opacity="0.08">
-                <line x1="0" y1="100" x2="800" y2="100" stroke="#00d4ff" stroke-width="0.5"/>
-                <line x1="0" y1="200" x2="800" y2="200" stroke="#a855f7" stroke-width="0.5"/>
-                <line x1="0" y1="300" x2="800" y2="300" stroke="#00d4ff" stroke-width="0.5"/>
-                <line x1="0" y1="400" x2="800" y2="400" stroke="#a855f7" stroke-width="0.5"/>
-                <line x1="0" y1="500" x2="800" y2="500" stroke="#00d4ff" stroke-width="0.5"/>
-                <line x1="0" y1="600" x2="800" y2="600" stroke="#a855f7" stroke-width="0.5"/>
-                <line x1="0" y1="700" x2="800" y2="700" stroke="#00d4ff" stroke-width="0.5"/>
-                <line x1="0" y1="800" x2="800" y2="800" stroke="#a855f7" stroke-width="0.5"/>
-            </g>
+                <!-- Q&A Grid -->
+                <div class="qa-grid">
+                    <!-- Q1 -->
+                    <div class="qa-card highlight">
+                        <div class="qa-number">Q1</div>
+                        <div class="qa-question">
+                            <span class="q-icon">⚡</span> What is AI Project Cycle?
+                        </div>
+                        <div class="qa-answer">
+                            A structured <strong>6-step approach</strong>: Problem Definition → Data Collection → Data Exploration → AI Modeling → Prediction & Evaluation → Continuous Improvement. It's a <strong>cyclical process</strong> that repeats for better results.
+                        </div>
+                    </div>
 
-            <!-- Floating geometric 3D shapes (hologram style) -->
-            <g opacity="0.15" filter="url(#glow)">
-                <polygon points="120,80 180,40 240,80 180,120" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
-                <polygon points="620,60 680,20 740,60 680,100" fill="none" stroke="#a855f7" stroke-width="1.5"/>
-                <circle cx="700" cy="800" r="40" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.4"/>
-                <circle cx="100" cy="820" r="30" fill="none" stroke="#00d4ff" stroke-width="1.2" opacity="0.3"/>
-            </g>
+                    <!-- Q2 -->
+                    <div class="qa-card">
+                        <div class="qa-number">Q2</div>
+                        <div class="qa-question">
+                            <span class="q-icon">📊</span> Why is data important?
+                        </div>
+                        <div class="qa-answer">
+                            Quality data is the foundation of accurate AI models. <strong>Good data</strong> leads to reliable predictions, meaningful insights, and helps us understand real patterns. <strong>Garbage in = Garbage out!</strong> More data + better quality = Better predictions.
+                        </div>
+                    </div>
 
-            <!-- 3D Holographic "AI" icon -->
-            <g transform="translate(400, 100)">
-                <!-- outer ring -->
-                <circle cx="0" cy="0" r="75" fill="none" stroke="url(#cyanPulse)" stroke-width="2" opacity="0.6" filter="url(#glow)"/>
-                <circle cx="0" cy="0" r="60" fill="none" stroke="#00d4ff" stroke-width="1.2" opacity="0.3" stroke-dasharray="8 6"/>
-                <circle cx="0" cy="0" r="45" fill="url(#purpleHolo)" opacity="0.15" filter="url(#softGlow)"/>
-                <!-- AI text in 3D -->
-                <text x="0" y="20" text-anchor="middle" font-size="52" font-weight="700" fill="url(#cyanPulse)" filter="url(#glow)" letter-spacing="8" style="text-shadow: 0 0 40px rgba(0,180,255,0.3);">AI</text>
-                <text x="0" y="20" text-anchor="middle" font-size="52" font-weight="700" fill="none" stroke="rgba(0,200,255,0.2)" stroke-width="1" letter-spacing="8" transform="translate(2,2)">AI</text>
-            </g>
+                    <!-- Q3 -->
+                    <div class="qa-card">
+                        <div class="qa-number">Q3</div>
+                        <div class="qa-question">
+                            <span class="q-icon">🧠</span> What is modelling?
+                        </div>
+                        <div class="qa-answer">
+                            Creating a <strong>mathematical/machine learning algorithm</strong> that learns patterns from historical data to make predictions on new data. We use algorithms like Neural Networks, XGBoost, and Decision Trees to identify factors causing student stress.
+                        </div>
+                    </div>
 
-            <!-- Main Title -->
-            <text x="400" y="230" text-anchor="middle" font-size="34" font-weight="700" fill="#e0f2fe" letter-spacing="4" filter="url(#glow)" opacity="0.9">AI PROJECT CYCLE</text>
+                    <!-- Q4 -->
+                    <div class="qa-card highlight">
+                        <div class="qa-number">Q4</div>
+                        <div class="qa-question">
+                            <span class="q-icon">🎯</span> Why evaluate the model?
+                        </div>
+                        <div class="qa-answer">
+                            Evaluation ensures our AI is <strong>accurate, fair, and reliable</strong> before deployment. It helps us identify errors, measure performance, collect user feedback, and make <strong>continuous improvements</strong> for better real-world results.
+                        </div>
+                    </div>
 
-            <!-- Stress line with holographic underline -->
-            <line x1="200" y1="252" x2="600" y2="252" stroke="url(#cyanPulse)" stroke-width="1.5" opacity="0.6" filter="url(#glow)"/>
-            <line x1="250" y1="260" x2="550" y2="260" stroke="url(#purpleHolo)" stroke-width="1" opacity="0.3"/>
+                    <!-- Q5 - Full width -->
+                    <div class="qa-card" style="grid-column: 1 / -1; background: rgba(168,85,247,0.04); border-color: rgba(168,85,247,0.08);">
+                        <div class="qa-number">Q5</div>
+                        <div class="qa-question">
+                            <span class="q-icon">💙</span> How can AI reduce student stress?
+                        </div>
+                        <div class="qa-answer">
+                            Through <strong>early detection</strong> of stress patterns, <strong>personalized recommendations</strong> for better habits, <strong>automated support</strong> via apps, <strong>timely interventions</strong> by counselors, and <strong>continuous monitoring</strong>. AI provides data-driven insights for <strong>preventive care</strong>.
+                        </div>
+                    </div>
+                </div>
 
-            <!-- Main heading: Student Stress Management -->
-            <text x="400" y="320" text-anchor="middle" font-size="42" font-weight="700" fill="url(#cyanPulse)" filter="url(#glow)" letter-spacing="3" style="text-shadow: 0 0 50px rgba(0,180,255,0.15);">Student Stress</text>
-            <text x="400" y="375" text-anchor="middle" font-size="36" font-weight="600" fill="url(#purpleHolo)" filter="url(#glow)" letter-spacing="5">Management</text>
-
-            <!-- 3D decorative block -->
-            <g transform="translate(400, 440)">
-                <rect x="-120" y="-18" width="240" height="36" rx="18" fill="url(#purpleHolo)" opacity="0.15" filter="url(#glow)"/>
-                <rect x="-110" y="-12" width="220" height="24" rx="12" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.3"/>
-            </g>
-
-            <!-- Reducing Anxiety line with glowing emoji -->
-            <text x="400" y="510" text-anchor="middle" font-size="24" font-weight="400" fill="#b8d4f0" letter-spacing="2" opacity="0.8">📌 Reducing Anxiety Through Artificial Intelligence ✨</text>
-
-            <!-- 3D floating icons around the text -->
-            <g opacity="0.2" filter="url(#glow)">
-                <text x="150" y="540" font-size="28">🧠</text>
-                <text x="650" y="540" font-size="28">💡</text>
-                <text x="200" y="580" font-size="22">⚡</text>
-                <text x="600" y="580" font-size="22">🌊</text>
-            </g>
-
-            <!-- Student details card with 3D hologram border -->
-            <g transform="translate(400, 660)">
-                <!-- glass card -->
-                <rect x="-220" y="-80" width="440" height="180" rx="24" fill="rgba(10,30,60,0.4)" stroke="rgba(0,200,255,0.12)" stroke-width="1.5" backdrop-filter="blur(8px)"/>
-                <rect x="-215" y="-75" width="430" height="170" rx="20" fill="none" stroke="url(#cyanPulse)" stroke-width="0.8" opacity="0.4"/>
-
-                <!-- Name -->
-                <text x="0" y="-38" text-anchor="middle" font-size="16" font-weight="300" fill="#7ab8d4" letter-spacing="3">NAME</text>
-                <text x="0" y="-8" text-anchor="middle" font-size="30" font-weight="600" fill="#e0f2fe" filter="url(#glow)" letter-spacing="2">PADMINI S RAWAL</text>
-
-                <!-- ID Roll -->
-                <text x="-100" y="40" text-anchor="middle" font-size="14" font-weight="300" fill="#7ab8d4" letter-spacing="2">ID ROLL No.</text>
-                <text x="-100" y="68" text-anchor="middle" font-size="26" font-weight="600" fill="#a5d8ff" filter="url(#glow)" letter-spacing="1">10416</text>
-
-                <!-- Class -->
-                <text x="100" y="40" text-anchor="middle" font-size="14" font-weight="300" fill="#7ab8d4" letter-spacing="2">CLASS</text>
-                <text x="100" y="68" text-anchor="middle" font-size="26" font-weight="600" fill="#a5d8ff" filter="url(#glow)" letter-spacing="3">10 th</text>
-
-                <!-- decorative line -->
-                <line x1="-180" y1="90" x2="180" y2="90" stroke="url(#purpleHolo)" stroke-width="0.8" opacity="0.3"/>
-            </g>
-
-            <!-- Holographic corner accents -->
-            <g opacity="0.3">
-                <path d="M30,30 L70,30 M30,30 L30,70" stroke="#00d4ff" stroke-width="2" fill="none"/>
-                <path d="M770,30 L730,30 M770,30 L770,70" stroke="#a855f7" stroke-width="2" fill="none"/>
-                <path d="M30,870 L70,870 M30,870 L30,830" stroke="#a855f7" stroke-width="2" fill="none"/>
-                <path d="M770,870 L730,870 M770,870 L770,830" stroke="#00d4ff" stroke-width="2" fill="none"/>
-            </g>
-
-            <!-- Micro AI / brain icon bottom -->
-            <g transform="translate(400, 840)" opacity="0.2">
-                <circle cx="0" cy="0" r="14" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
-                <text x="0" y="6" text-anchor="middle" font-size="16">🧬</text>
-            </g>
-
-            <!-- Faint 3D perspective grid -->
-            <g opacity="0.04" stroke="#ffffff" stroke-width="0.5">
-                <line x1="0" y1="450" x2="800" y2="450"/>
-                <line x1="0" y1="550" x2="800" y2="550"/>
-                <line x1="200" y1="0" x2="200" y2="900"/>
-                <line x1="600" y1="0" x2="600" y2="900"/>
-            </g>
-        </svg>
-        <div class="caption">✦ <span>holographic</span> · 3d · ai stress management ✦</div>
+                <!-- Footer -->
+                <div class="slide-footer">
+                    <div class="left">
+                        <span class="tag">◈ <span>HOLO</span> · 3D · AI STRESS MANAGEMENT</span>
+                        <span class="tag" style="font-size:10px;">v2.0</span>
+                    </div>
+                    <div class="progress-dots">
+                        <span class="dot active"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </body>
 </html>
