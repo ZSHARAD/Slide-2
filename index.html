@@ -1,1 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Hologram 3D - Student Stress Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background: #0a0a0f;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Segoe UI', system-ui, sans-serif;
+        }
+        .holo-card {
+            width: 520px;
+            background: rgba(10, 20, 40, 0.3);
+            backdrop-filter: blur(8px);
+            border-radius: 40px;
+            padding: 30px;
+            box-shadow: 0 0 60px rgba(0, 180, 255, 0.15),
+                        0 0 120px rgba(100, 0, 255, 0.08);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            transition: transform 0.3s ease;
+        }
+        .holo-card:hover {
+            transform: perspective(800px) rotateX(2deg) rotateY(4deg);
+        }
+        svg {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 28px;
+            filter: drop-shadow(0 0 30px rgba(0, 150, 255, 0.2));
+        }
+        .caption {
+            text-align: center;
+            margin-top: 18px;
+            color: rgba(160, 210, 255, 0.5);
+            font-size: 13px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            font-weight: 300;
+        }
+        .caption span {
+            color: rgba(100, 200, 255, 0.8);
+        }
+    </style>
+</head>
+<body>
+    <div class="holo-card">
+        <svg viewBox="0 0 800 900" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <!-- Holographic gradients -->
+                <linearGradient id="holoBg" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#0b1a33" stop-opacity="0.9"/>
+                    <stop offset="50%" stop-color="#142b4a" stop-opacity="0.7"/>
+                    <stop offset="100%" stop-color="#0a1226" stop-opacity="0.95"/>
+                </linearGradient>
+                <linearGradient id="cyanPulse" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#00d4ff" stop-opacity="0.6"/>
+                    <stop offset="50%" stop-color="#7b2ffc" stop-opacity="0.4"/>
+                    <stop offset="100%" stop-color="#00d4ff" stop-opacity="0.1"/>
+                </linearGradient>
+                <linearGradient id="purpleHolo" x1="0%" y1="100%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#a855f7" stop-opacity="0.5"/>
+                    <stop offset="50%" stop-color="#06b6d4" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#ec4899" stop-opacity="0.2"/>
+                </linearGradient>
+                <linearGradient id="stressGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="#f472b6" stop-opacity="0.8"/>
+                    <stop offset="50%" stop-color="#facc15" stop-opacity="0.6"/>
+                    <stop offset="100%" stop-color="#34d399" stop-opacity="0.4"/>
+                </linearGradient>
 
+                <!-- Glow filters -->
+                <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur stdDeviation="6" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+                    <feGaussianBlur stdDeviation="12" result="blur"/>
+                    <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+                </filter>
+                <filter id="hologramFlicker">
+                    <feTurbulence type="fractalNoise" baseFrequency="0.03 0.06" numOctaves="3" result="noise"/>
+                    <feDisplacementMap in="SourceGraphic" in2="noise" scale="3" xChannelSelector="R" yChannelSelector="G"/>
+                </filter>
+
+                <!-- 3D perspective -->
+                <filter id="perspective3d">
+                    <feConvolveMatrix order="3" kernelMatrix="0 0 0 0 0.8 0 0 0 0" />
+                </filter>
+            </defs>
+
+            <!-- Background -->
+            <rect width="800" height="900" rx="32" fill="url(#holoBg)"/>
+
+            <!-- Animated holographic scanlines -->
+            <g opacity="0.08">
+                <line x1="0" y1="100" x2="800" y2="100" stroke="#00d4ff" stroke-width="0.5"/>
+                <line x1="0" y1="200" x2="800" y2="200" stroke="#a855f7" stroke-width="0.5"/>
+                <line x1="0" y1="300" x2="800" y2="300" stroke="#00d4ff" stroke-width="0.5"/>
+                <line x1="0" y1="400" x2="800" y2="400" stroke="#a855f7" stroke-width="0.5"/>
+                <line x1="0" y1="500" x2="800" y2="500" stroke="#00d4ff" stroke-width="0.5"/>
+                <line x1="0" y1="600" x2="800" y2="600" stroke="#a855f7" stroke-width="0.5"/>
+                <line x1="0" y1="700" x2="800" y2="700" stroke="#00d4ff" stroke-width="0.5"/>
+                <line x1="0" y1="800" x2="800" y2="800" stroke="#a855f7" stroke-width="0.5"/>
+            </g>
+
+            <!-- Floating geometric 3D shapes (hologram style) -->
+            <g opacity="0.15" filter="url(#glow)">
+                <polygon points="120,80 180,40 240,80 180,120" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+                <polygon points="620,60 680,20 740,60 680,100" fill="none" stroke="#a855f7" stroke-width="1.5"/>
+                <circle cx="700" cy="800" r="40" fill="none" stroke="#ec4899" stroke-width="1.5" opacity="0.4"/>
+                <circle cx="100" cy="820" r="30" fill="none" stroke="#00d4ff" stroke-width="1.2" opacity="0.3"/>
+            </g>
+
+            <!-- 3D Holographic "AI" icon -->
+            <g transform="translate(400, 100)">
+                <!-- outer ring -->
+                <circle cx="0" cy="0" r="75" fill="none" stroke="url(#cyanPulse)" stroke-width="2" opacity="0.6" filter="url(#glow)"/>
+                <circle cx="0" cy="0" r="60" fill="none" stroke="#00d4ff" stroke-width="1.2" opacity="0.3" stroke-dasharray="8 6"/>
+                <circle cx="0" cy="0" r="45" fill="url(#purpleHolo)" opacity="0.15" filter="url(#softGlow)"/>
+                <!-- AI text in 3D -->
+                <text x="0" y="20" text-anchor="middle" font-size="52" font-weight="700" fill="url(#cyanPulse)" filter="url(#glow)" letter-spacing="8" style="text-shadow: 0 0 40px rgba(0,180,255,0.3);">AI</text>
+                <text x="0" y="20" text-anchor="middle" font-size="52" font-weight="700" fill="none" stroke="rgba(0,200,255,0.2)" stroke-width="1" letter-spacing="8" transform="translate(2,2)">AI</text>
+            </g>
+
+            <!-- Main Title -->
+            <text x="400" y="230" text-anchor="middle" font-size="34" font-weight="700" fill="#e0f2fe" letter-spacing="4" filter="url(#glow)" opacity="0.9">AI PROJECT CYCLE</text>
+
+            <!-- Stress line with holographic underline -->
+            <line x1="200" y1="252" x2="600" y2="252" stroke="url(#cyanPulse)" stroke-width="1.5" opacity="0.6" filter="url(#glow)"/>
+            <line x1="250" y1="260" x2="550" y2="260" stroke="url(#purpleHolo)" stroke-width="1" opacity="0.3"/>
+
+            <!-- Main heading: Student Stress Management -->
+            <text x="400" y="320" text-anchor="middle" font-size="42" font-weight="700" fill="url(#cyanPulse)" filter="url(#glow)" letter-spacing="3" style="text-shadow: 0 0 50px rgba(0,180,255,0.15);">Student Stress</text>
+            <text x="400" y="375" text-anchor="middle" font-size="36" font-weight="600" fill="url(#purpleHolo)" filter="url(#glow)" letter-spacing="5">Management</text>
+
+            <!-- 3D decorative block -->
+            <g transform="translate(400, 440)">
+                <rect x="-120" y="-18" width="240" height="36" rx="18" fill="url(#purpleHolo)" opacity="0.15" filter="url(#glow)"/>
+                <rect x="-110" y="-12" width="220" height="24" rx="12" fill="none" stroke="#00d4ff" stroke-width="1" opacity="0.3"/>
+            </g>
+
+            <!-- Reducing Anxiety line with glowing emoji -->
+            <text x="400" y="510" text-anchor="middle" font-size="24" font-weight="400" fill="#b8d4f0" letter-spacing="2" opacity="0.8">📌 Reducing Anxiety Through Artificial Intelligence ✨</text>
+
+            <!-- 3D floating icons around the text -->
+            <g opacity="0.2" filter="url(#glow)">
+                <text x="150" y="540" font-size="28">🧠</text>
+                <text x="650" y="540" font-size="28">💡</text>
+                <text x="200" y="580" font-size="22">⚡</text>
+                <text x="600" y="580" font-size="22">🌊</text>
+            </g>
+
+            <!-- Student details card with 3D hologram border -->
+            <g transform="translate(400, 660)">
+                <!-- glass card -->
+                <rect x="-220" y="-80" width="440" height="180" rx="24" fill="rgba(10,30,60,0.4)" stroke="rgba(0,200,255,0.12)" stroke-width="1.5" backdrop-filter="blur(8px)"/>
+                <rect x="-215" y="-75" width="430" height="170" rx="20" fill="none" stroke="url(#cyanPulse)" stroke-width="0.8" opacity="0.4"/>
+
+                <!-- Name -->
+                <text x="0" y="-38" text-anchor="middle" font-size="16" font-weight="300" fill="#7ab8d4" letter-spacing="3">NAME</text>
+                <text x="0" y="-8" text-anchor="middle" font-size="30" font-weight="600" fill="#e0f2fe" filter="url(#glow)" letter-spacing="2">PADMINI S RAWAL</text>
+
+                <!-- ID Roll -->
+                <text x="-100" y="40" text-anchor="middle" font-size="14" font-weight="300" fill="#7ab8d4" letter-spacing="2">ID ROLL No.</text>
+                <text x="-100" y="68" text-anchor="middle" font-size="26" font-weight="600" fill="#a5d8ff" filter="url(#glow)" letter-spacing="1">10416</text>
+
+                <!-- Class -->
+                <text x="100" y="40" text-anchor="middle" font-size="14" font-weight="300" fill="#7ab8d4" letter-spacing="2">CLASS</text>
+                <text x="100" y="68" text-anchor="middle" font-size="26" font-weight="600" fill="#a5d8ff" filter="url(#glow)" letter-spacing="3">10 th</text>
+
+                <!-- decorative line -->
+                <line x1="-180" y1="90" x2="180" y2="90" stroke="url(#purpleHolo)" stroke-width="0.8" opacity="0.3"/>
+            </g>
+
+            <!-- Holographic corner accents -->
+            <g opacity="0.3">
+                <path d="M30,30 L70,30 M30,30 L30,70" stroke="#00d4ff" stroke-width="2" fill="none"/>
+                <path d="M770,30 L730,30 M770,30 L770,70" stroke="#a855f7" stroke-width="2" fill="none"/>
+                <path d="M30,870 L70,870 M30,870 L30,830" stroke="#a855f7" stroke-width="2" fill="none"/>
+                <path d="M770,870 L730,870 M770,870 L770,830" stroke="#00d4ff" stroke-width="2" fill="none"/>
+            </g>
+
+            <!-- Micro AI / brain icon bottom -->
+            <g transform="translate(400, 840)" opacity="0.2">
+                <circle cx="0" cy="0" r="14" fill="none" stroke="#00d4ff" stroke-width="1.5"/>
+                <text x="0" y="6" text-anchor="middle" font-size="16">🧬</text>
+            </g>
+
+            <!-- Faint 3D perspective grid -->
+            <g opacity="0.04" stroke="#ffffff" stroke-width="0.5">
+                <line x1="0" y1="450" x2="800" y2="450"/>
+                <line x1="0" y1="550" x2="800" y2="550"/>
+                <line x1="200" y1="0" x2="200" y2="900"/>
+                <line x1="600" y1="0" x2="600" y2="900"/>
+            </g>
+        </svg>
+        <div class="caption">✦ <span>holographic</span> · 3d · ai stress management ✦</div>
+    </div>
+</body>
+</html>
