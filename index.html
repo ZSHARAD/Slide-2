@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>3D Hologram Viva Q&A - AI Project Cycle</title>
+    <title>3D Hologram Viva Q&A - Light Version</title>
     <style>
         * {
             margin: 0;
@@ -12,143 +12,119 @@
         }
 
         body {
-            background: #06080f;
+            background: #e8edf5;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
             font-family: 'Segoe UI', 'Poppins', system-ui, sans-serif;
-            overflow: hidden;
+            padding: 20px;
         }
 
-        /* Animated background particles */
-        .bg-particles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 0;
-            background: 
-                radial-gradient(ellipse at 20% 50%, rgba(0, 180, 255, 0.04) 0%, transparent 60%),
-                radial-gradient(ellipse at 80% 50%, rgba(168, 85, 247, 0.04) 0%, transparent 60%);
+        .slide-wrapper {
+            width: 1400px;
+            max-width: 100%;
+            perspective: 1400px;
         }
 
-        .slide-container {
-            position: relative;
-            z-index: 1;
-            width: 1300px;
-            max-width: 95vw;
-            padding: 30px;
-            perspective: 1200px;
-        }
-
-        /* Main holographic slide */
         .holo-slide {
-            background: rgba(8, 18, 40, 0.55);
-            backdrop-filter: blur(24px) saturate(1.4);
-            border-radius: 48px;
-            padding: 40px 50px 45px;
-            border: 1px solid rgba(0, 200, 255, 0.12);
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(30px) saturate(1.5);
+            border-radius: 50px;
+            padding: 45px 55px 50px;
+            border: 1px solid rgba(0, 150, 255, 0.15);
             box-shadow: 
                 0 0 80px rgba(0, 150, 255, 0.06),
                 0 0 160px rgba(100, 0, 255, 0.04),
-                inset 0 0 80px rgba(0, 200, 255, 0.02);
-            transform: rotateX(2deg) rotateY(-1deg);
-            transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+                inset 0 0 80px rgba(0, 200, 255, 0.02),
+                0 20px 60px rgba(0, 0, 0, 0.04);
+            transform: rotateX(1.5deg) rotateY(0.5deg);
+            transition: transform 0.5s ease;
             position: relative;
             overflow: hidden;
         }
 
         .holo-slide:hover {
-            transform: rotateX(0deg) rotateY(0deg) scale(1.002);
+            transform: rotateX(0deg) rotateY(0deg);
         }
 
-        /* Holographic scanline overlay */
-        .scanlines {
+        /* Animated border - light version */
+        .border-glow {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            background: repeating-linear-gradient(
-                0deg,
-                transparent,
-                transparent 2px,
-                rgba(0, 200, 255, 0.015) 2px,
-                rgba(0, 200, 255, 0.015) 4px
-            );
-            z-index: 10;
-            animation: scanMove 8s linear infinite;
-        }
-
-        @keyframes scanMove {
-            0% { transform: translateY(0); }
-            100% { transform: translateY(100%); }
-        }
-
-        /* Animated glow border */
-        .glow-border {
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            width: calc(100% + 4px);
-            height: calc(100% + 4px);
-            border-radius: 50px;
+            inset: -2px;
+            border-radius: 52px;
             background: conic-gradient(
                 from 0deg,
                 transparent 0%,
-                rgba(0, 200, 255, 0.15) 20%,
-                rgba(168, 85, 247, 0.15) 40%,
-                rgba(0, 200, 255, 0.15) 60%,
-                rgba(168, 85, 247, 0.15) 80%,
+                rgba(0, 150, 255, 0.25) 15%,
+                rgba(168, 85, 247, 0.2) 35%,
+                rgba(0, 200, 255, 0.25) 55%,
+                rgba(168, 85, 247, 0.2) 75%,
                 transparent 100%
             );
             z-index: 0;
-            animation: borderSpin 12s linear infinite;
+            animation: spinBorder 15s linear infinite;
             mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask-composite: exclude;
             -webkit-mask-composite: xor;
             padding: 2px;
         }
 
-        @keyframes borderSpin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        @keyframes spinBorder {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scanlines - very subtle */
+        .scanlines {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background: repeating-linear-gradient(
+                0deg,
+                transparent 0px,
+                transparent 3px,
+                rgba(0, 150, 255, 0.015) 3px,
+                rgba(0, 150, 255, 0.015) 4px
+            );
+            animation: scanMove 10s linear infinite;
+        }
+
+        @keyframes scanMove {
+            0% { transform: translateY(-100%); }
+            100% { transform: translateY(100%); }
         }
 
         .slide-content {
             position: relative;
-            z-index: 2;
+            z-index: 5;
         }
 
-        /* Header */
-        .slide-header {
+        /* ===== HEADER ===== */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 28px;
-            padding-bottom: 18px;
-            border-bottom: 1px solid rgba(0, 200, 255, 0.08);
+            margin-bottom: 32px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(0, 100, 200, 0.08);
         }
 
-        .slide-title {
+        .header-left {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 20px;
         }
 
-        .slide-title h1 {
-            font-size: 32px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #60b0ff, #a855f7, #60b0ff);
+        .header-left h1 {
+            font-size: 38px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #1a73e8, #7c3aed, #1a73e8);
             background-size: 200% 200%;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            animation: gradShift 4s ease-in-out infinite;
-            letter-spacing: 2px;
+            animation: gradShift 5s ease-in-out infinite;
+            letter-spacing: 1px;
         }
 
         @keyframes gradShift {
@@ -156,314 +132,310 @@
             50% { background-position: 100% 50%; }
         }
 
-        .slide-title .badge {
-            font-size: 11px;
+        .badge {
+            font-size: 13px;
             font-weight: 600;
-            color: #7ab8d4;
-            background: rgba(0, 200, 255, 0.08);
-            border: 1px solid rgba(0, 200, 255, 0.15);
-            padding: 4px 14px;
-            border-radius: 20px;
+            color: #1a56a0;
+            background: rgba(0, 100, 200, 0.06);
+            border: 1px solid rgba(0, 100, 200, 0.12);
+            padding: 6px 20px;
+            border-radius: 30px;
             letter-spacing: 2px;
             text-transform: uppercase;
         }
 
-        .hologram-icon {
-            font-size: 28px;
-            opacity: 0.5;
-            animation: pulseIcon 3s ease-in-out infinite;
+        .holo-symbol {
+            font-size: 32px;
+            opacity: 0.2;
+            color: #1a73e8;
+            animation: pulseSym 4s ease-in-out infinite;
         }
 
-        @keyframes pulseIcon {
-            0%, 100% { opacity: 0.3; transform: scale(1); }
-            50% { opacity: 0.8; transform: scale(1.1); }
+        @keyframes pulseSym {
+            0%, 100% { opacity: 0.15; transform: scale(1) rotate(0deg); }
+            50% { opacity: 0.5; transform: scale(1.1) rotate(10deg); }
         }
 
-        /* Q&A Grid */
+        /* ===== Q&A GRID ===== */
         .qa-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 24px;
         }
 
         .qa-card {
-            background: rgba(10, 30, 60, 0.3);
-            border-radius: 24px;
-            padding: 22px 26px 24px;
-            border: 1px solid rgba(0, 200, 255, 0.06);
-            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
-            position: relative;
-            overflow: hidden;
+            background: rgba(255, 255, 255, 0.6);
+            border-radius: 28px;
+            padding: 26px 30px 28px;
+            border: 1px solid rgba(0, 100, 200, 0.06);
+            transition: all 0.4s ease;
             backdrop-filter: blur(4px);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.02);
         }
 
         .qa-card:hover {
-            border-color: rgba(0, 200, 255, 0.2);
-            background: rgba(10, 40, 80, 0.35);
-            transform: translateY(-3px) scale(1.005);
-            box-shadow: 0 8px 40px rgba(0, 150, 255, 0.06);
+            border-color: rgba(0, 100, 200, 0.2);
+            background: rgba(255, 255, 255, 0.85);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 50px rgba(0, 50, 150, 0.06);
         }
 
-        .qa-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: linear-gradient(90deg, transparent, rgba(0, 200, 255, 0.2), transparent);
-            opacity: 0;
-            transition: opacity 0.4s;
+        .qa-card.highlight {
+            background: rgba(0, 100, 200, 0.03);
+            border-color: rgba(0, 100, 200, 0.08);
         }
 
-        .qa-card:hover::before {
-            opacity: 1;
-        }
-
-        /* Holographic number */
         .qa-number {
-            font-size: 11px;
-            font-weight: 600;
-            color: rgba(0, 200, 255, 0.25);
-            letter-spacing: 3px;
+            font-size: 13px;
+            font-weight: 700;
+            color: rgba(0, 100, 200, 0.3);
+            letter-spacing: 4px;
             text-transform: uppercase;
-            margin-bottom: 4px;
             font-family: 'Courier New', monospace;
+            margin-bottom: 6px;
         }
 
         .qa-question {
-            font-size: 18px;
-            font-weight: 600;
-            color: #b0daff;
-            margin-bottom: 8px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #0a1e3c;
+            margin-bottom: 10px;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            line-height: 1.3;
         }
 
-        .qa-question .q-icon {
-            font-size: 20px;
-            opacity: 0.5;
+        .qa-question .icon {
+            font-size: 24px;
+            opacity: 0.7;
+            flex-shrink: 0;
         }
 
         .qa-answer {
-            font-size: 15px;
-            line-height: 1.6;
-            color: rgba(180, 210, 240, 0.8);
-            font-weight: 300;
+            font-size: 17px;
+            line-height: 1.7;
+            color: #1a304a;
+            font-weight: 400;
         }
 
         .qa-answer strong {
-            color: rgba(100, 200, 255, 0.9);
+            color: #1a5fc7;
+            font-weight: 600;
+        }
+
+        .qa-answer .highlight-text {
+            color: #c77d1a;
             font-weight: 500;
         }
 
-        /* Special highlight cards */
-        .qa-card.highlight {
-            background: rgba(0, 200, 255, 0.04);
-            border-color: rgba(0, 200, 255, 0.1);
+        /* Full width card */
+        .qa-card.full {
+            grid-column: 1 / -1;
+            background: rgba(124, 58, 237, 0.02);
+            border-color: rgba(124, 58, 237, 0.06);
         }
 
-        .qa-card.highlight .qa-question {
-            color: #80d0ff;
-        }
-
-        /* Footer */
-        .slide-footer {
-            margin-top: 28px;
-            padding-top: 18px;
-            border-top: 1px solid rgba(0, 200, 255, 0.06);
+        /* ===== FOOTER ===== */
+        .footer {
+            margin-top: 32px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(0, 100, 200, 0.06);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
-        .slide-footer .left {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .slide-footer .tag {
-            font-size: 11px;
-            color: rgba(0, 200, 255, 0.3);
-            letter-spacing: 2px;
+        .footer-tag {
+            font-size: 12px;
+            color: rgba(0, 80, 180, 0.3);
+            letter-spacing: 3px;
             font-weight: 300;
             font-family: 'Courier New', monospace;
         }
 
-        .slide-footer .tag span {
-            color: rgba(168, 85, 247, 0.4);
+        .footer-tag span {
+            color: rgba(124, 58, 237, 0.35);
         }
 
-        .progress-dots {
+        .dots {
             display: flex;
-            gap: 6px;
+            gap: 8px;
         }
 
-        .progress-dots .dot {
-            width: 6px;
-            height: 6px;
+        .dots .dot {
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: rgba(0, 200, 255, 0.15);
-            transition: all 0.3s;
+            background: rgba(0, 100, 200, 0.15);
+            transition: 0.3s;
         }
 
-        .progress-dots .dot.active {
-            background: rgba(0, 200, 255, 0.5);
-            box-shadow: 0 0 12px rgba(0, 200, 255, 0.2);
-            width: 20px;
-            border-radius: 3px;
+        .dots .dot.active {
+            background: rgba(0, 100, 200, 0.4);
+            width: 24px;
+            border-radius: 4px;
+            box-shadow: 0 0 20px rgba(0, 100, 200, 0.08);
         }
 
-        .progress-dots .dot:hover {
-            background: rgba(0, 200, 255, 0.3);
-        }
-
-        /* Responsive */
+        /* ===== RESPONSIVE ===== */
         @media (max-width: 1024px) {
             .qa-grid {
                 grid-template-columns: 1fr;
-                gap: 16px;
+                gap: 18px;
             }
             .holo-slide {
-                padding: 28px 24px 32px;
+                padding: 30px 28px 35px;
             }
-            .slide-title h1 {
-                font-size: 24px;
+            .header-left h1 {
+                font-size: 28px;
+            }
+            .qa-question {
+                font-size: 19px;
+            }
+            .qa-answer {
+                font-size: 15px;
             }
         }
 
         @media (max-width: 600px) {
-            .slide-title h1 {
-                font-size: 18px;
-                letter-spacing: 0;
-            }
-            .qa-question {
-                font-size: 15px;
-            }
-            .qa-answer {
-                font-size: 13px;
-            }
             .holo-slide {
                 padding: 18px 14px 22px;
                 border-radius: 28px;
             }
-        }
-
-        /* Floating 3D particles */
-        .particle-3d {
-            position: absolute;
-            border-radius: 50%;
-            pointer-events: none;
-            background: radial-gradient(circle, rgba(0, 200, 255, 0.1), transparent);
-            animation: floatParticle 20s infinite alternate ease-in-out;
-        }
-
-        @keyframes floatParticle {
-            0% { transform: translate(0, 0) scale(1); opacity: 0.1; }
-            100% { transform: translate(40px, -30px) scale(1.5); opacity: 0.3; }
+            .header-left h1 {
+                font-size: 20px;
+            }
+            .badge {
+                font-size: 9px;
+                padding: 4px 12px;
+            }
+            .qa-question {
+                font-size: 16px;
+            }
+            .qa-answer {
+                font-size: 13px;
+                line-height: 1.5;
+            }
+            .qa-card {
+                padding: 18px 16px 20px;
+            }
+            .footer-tag {
+                font-size: 9px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="bg-particles"></div>
 
-    <div class="slide-container">
-        <div class="holo-slide">
-            <!-- Glow border -->
-            <div class="glow-border"></div>
-            <!-- Scanlines -->
-            <div class="scanlines"></div>
+<div class="slide-wrapper">
+    <div class="holo-slide">
 
-            <!-- 3D floating particles -->
-            <div class="particle-3d" style="width:300px;height:300px;top:-80px;right:-60px;animation-delay:0s;"></div>
-            <div class="particle-3d" style="width:200px;height:200px;bottom:-40px;left:-30px;animation-delay:6s;background:radial-gradient(circle,rgba(168,85,247,0.08),transparent);"></div>
+        <!-- Animated Border -->
+        <div class="border-glow"></div>
+        <!-- Scanlines -->
+        <div class="scanlines"></div>
 
-            <div class="slide-content">
-                <!-- Header -->
-                <div class="slide-header">
-                    <div class="slide-title">
-                        <h1>✦ Viva Q&A</h1>
-                        <span class="badge">AI Project Cycle</span>
-                    </div>
-                    <div class="hologram-icon">◈</div>
+        <div class="slide-content">
+
+            <!-- HEADER -->
+            <div class="header">
+                <div class="header-left">
+                    <h1>✦ Viva Q&A</h1>
+                    <span class="badge">AI Project Cycle</span>
                 </div>
+                <div class="holo-symbol">◈</div>
+            </div>
 
-                <!-- Q&A Grid -->
-                <div class="qa-grid">
-                    <!-- Q1 -->
-                    <div class="qa-card highlight">
-                        <div class="qa-number">Q1</div>
-                        <div class="qa-question">
-                            <span class="q-icon">⚡</span> What is AI Project Cycle?
-                        </div>
-                        <div class="qa-answer">
-                            A structured <strong>6-step approach</strong>: Problem Definition → Data Collection → Data Exploration → AI Modeling → Prediction & Evaluation → Continuous Improvement. It's a <strong>cyclical process</strong> that repeats for better results.
-                        </div>
+            <!-- Q&A GRID -->
+            <div class="qa-grid">
+
+                <!-- Q1 -->
+                <div class="qa-card highlight">
+                    <div class="qa-number">Q1</div>
+                    <div class="qa-question">
+                        <span class="icon">⚡</span> What is AI Project Cycle?
                     </div>
-
-                    <!-- Q2 -->
-                    <div class="qa-card">
-                        <div class="qa-number">Q2</div>
-                        <div class="qa-question">
-                            <span class="q-icon">📊</span> Why is data important?
-                        </div>
-                        <div class="qa-answer">
-                            Quality data is the foundation of accurate AI models. <strong>Good data</strong> leads to reliable predictions, meaningful insights, and helps us understand real patterns. <strong>Garbage in = Garbage out!</strong> More data + better quality = Better predictions.
-                        </div>
-                    </div>
-
-                    <!-- Q3 -->
-                    <div class="qa-card">
-                        <div class="qa-number">Q3</div>
-                        <div class="qa-question">
-                            <span class="q-icon">🧠</span> What is modelling?
-                        </div>
-                        <div class="qa-answer">
-                            Creating a <strong>mathematical/machine learning algorithm</strong> that learns patterns from historical data to make predictions on new data. We use algorithms like Neural Networks, XGBoost, and Decision Trees to identify factors causing student stress.
-                        </div>
-                    </div>
-
-                    <!-- Q4 -->
-                    <div class="qa-card highlight">
-                        <div class="qa-number">Q4</div>
-                        <div class="qa-question">
-                            <span class="q-icon">🎯</span> Why evaluate the model?
-                        </div>
-                        <div class="qa-answer">
-                            Evaluation ensures our AI is <strong>accurate, fair, and reliable</strong> before deployment. It helps us identify errors, measure performance, collect user feedback, and make <strong>continuous improvements</strong> for better real-world results.
-                        </div>
-                    </div>
-
-                    <!-- Q5 - Full width -->
-                    <div class="qa-card" style="grid-column: 1 / -1; background: rgba(168,85,247,0.04); border-color: rgba(168,85,247,0.08);">
-                        <div class="qa-number">Q5</div>
-                        <div class="qa-question">
-                            <span class="q-icon">💙</span> How can AI reduce student stress?
-                        </div>
-                        <div class="qa-answer">
-                            Through <strong>early detection</strong> of stress patterns, <strong>personalized recommendations</strong> for better habits, <strong>automated support</strong> via apps, <strong>timely interventions</strong> by counselors, and <strong>continuous monitoring</strong>. AI provides data-driven insights for <strong>preventive care</strong>.
-                        </div>
+                    <div class="qa-answer">
+                        A structured <strong>6-step approach</strong>: <br/>
+                        Problem Definition → Data Collection → Data Exploration → <br/>
+                        AI Modeling → Prediction & Evaluation → Continuous Improvement. <br/>
+                        It's a <strong>cyclical process</strong> that repeats for better results.
                     </div>
                 </div>
 
-                <!-- Footer -->
-                <div class="slide-footer">
-                    <div class="left">
-                        <span class="tag">◈ <span>HOLO</span> · 3D · AI STRESS MANAGEMENT</span>
-                        <span class="tag" style="font-size:10px;">v2.0</span>
+                <!-- Q2 -->
+                <div class="qa-card">
+                    <div class="qa-number">Q2</div>
+                    <div class="qa-question">
+                        <span class="icon">📊</span> Why is data important?
                     </div>
-                    <div class="progress-dots">
-                        <span class="dot active"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
-                        <span class="dot"></span>
+                    <div class="qa-answer">
+                        Quality data is the <strong>foundation</strong> of accurate AI models. <br/>
+                        <span class="highlight-text">Good data</span> → reliable predictions &amp; meaningful insights. <br/>
+                        <strong>Garbage in = Garbage out!</strong> <br/>
+                        More data + better quality = <strong>Better predictions</strong>.
                     </div>
+                </div>
+
+                <!-- Q3 -->
+                <div class="qa-card">
+                    <div class="qa-number">Q3</div>
+                    <div class="qa-question">
+                        <span class="icon">🧠</span> What is modelling?
+                    </div>
+                    <div class="qa-answer">
+                        Creating a <strong>machine learning algorithm</strong> that learns <br/>
+                        patterns from historical data to make <strong>predictions</strong> on new data. <br/>
+                        Algorithms: Neural Networks, XGBoost, Decision Trees <br/>
+                        to identify <strong>student stress factors</strong>.
+                    </div>
+                </div>
+
+                <!-- Q4 -->
+                <div class="qa-card highlight">
+                    <div class="qa-number">Q4</div>
+                    <div class="qa-question">
+                        <span class="icon">🎯</span> Why evaluate the model?
+                    </div>
+                    <div class="qa-answer">
+                        Ensures AI is <strong>accurate, fair, and reliable</strong> before deployment. <br/>
+                        Helps identify errors, measure performance, <br/>
+                        collect feedback, and make <strong>continuous improvements</strong> <br/>
+                        for better real-world results.
+                    </div>
+                </div>
+
+                <!-- Q5 - Full Width -->
+                <div class="qa-card full">
+                    <div class="qa-number">Q5</div>
+                    <div class="qa-question">
+                        <span class="icon">💙</span> How can AI reduce student stress?
+                    </div>
+                    <div class="qa-answer">
+                        <strong>Early detection</strong> of stress patterns · <strong>Personalized recommendations</strong> · <br/>
+                        <strong>Automated support</strong> via apps · <strong>Timely interventions</strong> by counselors · <br/>
+                        <strong>Continuous monitoring</strong>. AI provides <span class="highlight-text">data-driven insights</span> for <strong>preventive care</strong>.
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- FOOTER -->
+            <div class="footer">
+                <span class="footer-tag">◈ <span>HOLO</span> · 3D · AI STRESS MANAGEMENT</span>
+                <div class="dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
                 </div>
             </div>
-        </div>
-    </div>
+
+        </div><!-- /slide-content -->
+    </div><!-- /holo-slide -->
+</div><!-- /slide-wrapper -->
+
 </body>
 </html>
