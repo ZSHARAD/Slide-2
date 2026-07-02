@@ -1,120 +1,338 @@
 <!DOCTYPE html>
 <html>
 <head>
+<meta charset="UTF-8">
+<title>AI Project Cycle - Student Stress Management</title>
 <style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    margin: 0;
-    height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: radial-gradient(ellipse at center, #0a0e27 0%, #000000 100%);
+    font-family: 'Segoe UI', Arial, sans-serif;
+    background: #1a1a2e;
     overflow: hidden;
-    font-family: 'Arial Black', 'Segoe UI', sans-serif;
+    height: 100vh;
   }
-
-  .hologram-container {
-    perspective: 1000px;
-  }
-
-  .hologram-text {
-    font-size: 6rem;
-    font-weight: 900;
-    text-transform: uppercase;
-    letter-spacing: 4px;
+  .slideshow {
     position: relative;
-    color: #ffffff;
-    text-align: center;
-    transform-style: preserve-3d;
-    animation: float 4s ease-in-out infinite, flicker 3s infinite;
-
-    /* Core holographic gradient */
-    background: linear-gradient(
-      180deg,
-      #00fff2 0%,
-      #00c2ff 25%,
-      #6a00ff 50%,
-      #ff00e6 75%,
-      #00fff2 100%
-    );
-    background-size: 100% 300%;
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-
-    /* Layered glow for depth */
-    filter: drop-shadow(0 0 10px rgba(0, 255, 242, 0.8))
-            drop-shadow(0 0 25px rgba(106, 0, 255, 0.6))
-            drop-shadow(0 0 45px rgba(255, 0, 230, 0.4));
-
-    animation: float 4s ease-in-out infinite,
-               gradientShift 5s linear infinite,
-               flicker 3.5s infinite;
+    width: 100vw;
+    height: 100vh;
   }
-
-  /* 3D depth layers behind main text (creates the "hologram slab" look) */
-  .hologram-text::before,
-  .hologram-text::after {
-    content: attr(data-text);
+  .slide {
     position: absolute;
-    left: 0;
-    top: 0;
-    width: 100%;
-    background: linear-gradient(180deg, #00fff2, #6a00ff, #ff00e6);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-    z-index: -1;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    padding: 50px 80px;
+    opacity: 0;
+    transition: opacity 0.5s ease;
   }
+  .slide.active { display: flex; opacity: 1; }
 
-  .hologram-text::before {
-    transform: translateZ(-15px);
-    opacity: 0.5;
-    filter: blur(2px);
+  h1 { font-size: 2.4rem; color: #1e3a8a; margin-bottom: 20px; display:flex; align-items:center; gap:12px;}
+  .underline { width: 100px; height: 4px; background: #f5a623; margin-bottom: 30px; }
+
+  /* Title slide */
+  #slide0 { background: linear-gradient(160deg,#2b3aa8,#7b3ff2); color:white; text-align:center; align-items:center;}
+  #slide0 h1 { color:white; font-size:3rem; justify-content:center; }
+  #slide0 h2 { font-size:1.6rem; margin-bottom:15px; }
+  #slide0 p.sub { font-style:italic; opacity:0.9; margin-bottom:40px; }
+  #slide0 .meta { display:flex; gap:60px; font-size:0.95rem; opacity:0.85; }
+
+  /* Card layouts */
+  .cards { display:flex; gap:25px; flex-wrap:wrap; }
+  .card {
+    flex:1; min-width:260px; background:white; border-radius:12px;
+    padding:25px; box-shadow:0 8px 20px rgba(0,0,0,0.08);
+    border-left:5px solid #ccc;
   }
+  .card h3 { margin-bottom:15px; font-size:1.2rem; }
+  .card ul { list-style:none; }
+  .card li { margin-bottom:10px; color:#333; }
+  .card li::before { content:"✓ "; color:#22c55e; font-weight:bold; }
 
-  .hologram-text::after {
-    transform: translateZ(-30px);
-    opacity: 0.25;
-    filter: blur(5px);
+  .red { border-color:#ef4444; } .red h3 { color:#ef4444; }
+  .green { border-color:#22c55e; } .green h3 { color:#22c55e; }
+  .purple { border-color:#8b5cf6; } .purple h3 { color:#8b5cf6; }
+
+  /* Progress bars */
+  .bar-label { display:flex; justify-content:space-between; margin:15px 0 8px; font-weight:600; }
+  .bar-bg { background:#e5e7eb; border-radius:20px; height:18px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:20px; display:flex; align-items:center; justify-content:flex-end; padding-right:10px; color:white; font-size:0.75rem; font-weight:bold; }
+
+  /* Stat grid */
+  .stat-grid { display:flex; gap:20px; margin-top:20px; flex-wrap:wrap; }
+  .stat { flex:1; min-width:150px; background:white; border-radius:10px; padding:20px; text-align:center; box-shadow:0 4px 12px rgba(0,0,0,0.08); }
+  .stat .num { font-size:2rem; font-weight:800; }
+  .stat .label { color:#555; margin-top:5px; }
+
+  /* Process flow */
+  .flow { display:flex; align-items:center; gap:15px; flex-wrap:wrap; justify-content:center; }
+  .flow-step { background:white; border-radius:10px; padding:20px; text-align:center; min-width:130px; box-shadow:0 4px 10px rgba(0,0,0,0.08); border-top:4px solid #6366f1; }
+  .flow-arrow { font-size:1.5rem; color:#38bdf8; }
+
+  /* Dark slides */
+  .dark-bg { background: linear-gradient(160deg,#0f172a,#1e3a8a); color:white; }
+  .dark-bg h1 { color:white; }
+  .dark-bg .card { background:rgba(255,255,255,0.07); color:white; border-left:4px solid #38bdf8;}
+  .dark-bg .card h3 { color:white; }
+
+  /* Q&A slide */
+  .qa { background:rgba(255,255,255,0.06); border-left:4px solid #38bdf8; border-radius:8px; padding:18px 20px; margin-bottom:14px; }
+  .qa h4 { color:#4ade80; margin-bottom:8px; font-size:1.05rem; }
+  .qa p { color:#cbd5e1; font-size:0.9rem; line-height:1.5; }
+
+  /* Navigation */
+  .nav-btn {
+    position:absolute; top:50%; transform:translateY(-50%);
+    background:rgba(255,255,255,0.15); color:white; border:none;
+    width:50px; height:50px; border-radius:50%; font-size:1.5rem;
+    cursor:pointer; z-index:100; backdrop-filter:blur(4px);
   }
+  .nav-btn:hover { background:rgba(255,255,255,0.3); }
+  #prevBtn { left:20px; } #nextBtn { right:20px; }
 
-  /* Scanline overlay for authentic holographic feel */
-  .hologram-text::marker { display: none; }
+  .dots { position:absolute; bottom:20px; left:50%; transform:translateX(-50%); display:flex; gap:8px; z-index:100; }
+  .dot { width:9px; height:9px; border-radius:50%; background:rgba(255,255,255,0.4); cursor:pointer; }
+  .dot.active { background:#f5a623; width:22px; border-radius:5px; }
 
-  .scanlines {
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: repeating-linear-gradient(
-      0deg,
-      rgba(0, 255, 242, 0.03) 0px,
-      rgba(0, 255, 242, 0.03) 1px,
-      transparent 2px,
-      transparent 4px
-    );
-    pointer-events: none;
-  }
-
-  @keyframes float {
-    0%, 100% { transform: rotateX(8deg) rotateY(-4deg) translateY(0px); }
-    50% { transform: rotateX(4deg) rotateY(4deg) translateY(-12px); }
-  }
-
-  @keyframes gradientShift {
-    0% { background-position: 0% 0%; }
-    100% { background-position: 0% 300%; }
-  }
-
-  @keyframes flicker {
-    0%, 19%, 21%, 23%, 25%, 54%, 56%, 100% { opacity: 1; }
-    20%, 22%, 24%, 55% { opacity: 0.85; }
-  }
+  .slide-num { position:absolute; top:20px; right:30px; color:rgba(255,255,255,0.6); font-size:0.85rem; z-index:100;}
 </style>
 </head>
 <body>
-  <div class="hologram-container">
-    <h1 class="hologram-text" data-text="AI PROJECT CYCLE">AI PROJECT CYCLE</h1>
+
+<div class="slideshow">
+
+  <!-- Slide 0: Title -->
+  <div class="slide active" id="slide0">
+    <h1>🧠 AI PROJECT CYCLE</h1>
+    <h2>Student Stress Management</h2>
+    <p class="sub">✨ Reducing Anxiety Through Artificial Intelligence ✨</p>
+    <div class="meta">
+      <div>👤 Name: PADMINI S RAWAL</div>
+      <div>🆔 Roll No: 10416 &nbsp; | &nbsp; Class: 10th</div>
+    </div>
   </div>
-  <div class="scanlines"></div>
+
+  <!-- Slide 1: Problem Scoping -->
+  <div class="slide">
+    <h1>🎯 Problem Scoping</h1>
+    <div class="underline"></div>
+    <div class="cards">
+      <div class="card red">
+        <h3>🔴 Problem</h3>
+        <ul><li>Exam Stress</li><li>Homework Overload</li><li>Poor Time Management</li><li>Sleep Deprivation</li><li>Anxiety & Burnout</li></ul>
+      </div>
+      <div class="card green">
+        <h3>👥 Stakeholders</h3>
+        <ul><li>Students</li><li>Teachers</li><li>Parents</li><li>School Counselors</li><li>Administrators</li></ul>
+      </div>
+      <div class="card purple">
+        <h3>✅ Goal</h3>
+        <ul><li>Predict Stress Levels</li><li>Early Intervention</li><li>Mental Health Support</li><li>Better Academic Performance</li><li>Reduce Dropout Rates</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 2: Data Acquisition -->
+  <div class="slide">
+    <h1>📊 Data Acquisition</h1>
+    <div class="underline"></div>
+    <div class="flow">
+      <div class="flow-step">📋<br><b>Survey Students</b><br><small>Collect self-reported data</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">🧑‍🏫<br><b>Interview Teachers</b><br><small>Behavioral observations</small></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">👨‍👩‍👧<br><b>Interview Parents</b><br><small>Home observations</small></div>
+    </div>
+    <div class="flow" style="margin-top:25px;">
+      <div class="flow-step">😴<br><b>Sleep Hours</b><br><small>6-8 hrs optimal</small></div>
+      <div class="flow-step">📚<br><b>Study Hours</b><br><small>3-4 hrs balanced</small></div>
+      <div class="flow-step">📱<br><b>Screen Time</b><br><small>Track usage</small></div>
+      <div class="flow-step">🎯<br><b>Test Scores</b><br><small>Performance data</small></div>
+      <div class="flow-step">💯<br><b>Grades</b><br><small>Academic records</small></div>
+    </div>
+  </div>
+
+  <!-- Slide 3: Data Exploration -->
+  <div class="slide">
+    <h1>📈 Data Exploration</h1>
+    <div class="underline"></div>
+    <div class="card" style="margin-bottom:20px;">
+      <h3>📊 Stress vs Sleep Hours (Negative Correlation)</h3>
+      <p style="color:#666; margin-bottom:10px;">Higher sleep hours = Lower stress levels</p>
+      <div class="bar-bg"><div class="bar-fill" style="width:75%; background:linear-gradient(90deg,#22c55e,#06b6d4);">Strong ✓</div></div>
+    </div>
+    <div class="card" style="margin-bottom:20px;">
+      <h3>📊 Study Hours vs Marks (Optimal Balance)</h3>
+      <p style="color:#666; margin-bottom:10px;">Sweet spot: 3-4 hours daily = Best grades</p>
+      <div class="bar-bg"><div class="bar-fill" style="width:65%; background:linear-gradient(90deg,#f59e0b,#fbbf24);">Moderate ✓</div></div>
+    </div>
+    <div class="card">
+      <h3>🎯 Major Stress Causes</h3>
+      <div class="stat-grid">
+        <div class="stat" style="border-top:4px solid #ef4444;"><div class="num" style="color:#ef4444;">40%</div><div class="label">Exams</div></div>
+        <div class="stat" style="border-top:4px solid #f59e0b;"><div class="num" style="color:#f59e0b;">35%</div><div class="label">Workload</div></div>
+        <div class="stat" style="border-top:4px solid #8b5cf6;"><div class="num" style="color:#8b5cf6;">15%</div><div class="label">Time Mgmt</div></div>
+        <div class="stat" style="border-top:4px solid #22c55e;"><div class="num" style="color:#22c55e;">10%</div><div class="label">Social Pressure</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 4: AI Modeling -->
+  <div class="slide dark-bg">
+    <h1>🤖 AI Modeling & Prediction</h1>
+    <div class="underline" style="background:#22c55e;"></div>
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card">😴<br><b>Sleep Hours</b><br><small>Quality & quantity</small></div>
+      <div class="card">📚<br><b>Study Hours</b><br><small>Daily study time</small></div>
+      <div class="card">📱<br><b>Screen Time</b><br><small>Device usage</small></div>
+    </div>
+    <div style="background:linear-gradient(90deg,#8b5cf6,#ec4899); border-radius:12px; padding:25px; text-align:center; margin-bottom:20px;">
+      <h3>🧠 MACHINE LEARNING MODEL</h3>
+      <p>Predicts Student Stress Level using Neural Networks & XGBoost</p>
+    </div>
+    <div class="card" style="border-left:4px solid #22c55e;">
+      <h3 style="color:#4ade80;">📋 Personalized AI Recommendations</h3>
+      <div style="display:flex; gap:30px; flex-wrap:wrap;">
+        <ul><li>Custom Study Timetable</li><li>Exercise & Wellness Routines</li></ul>
+        <ul><li>Break & Rest Suggestions</li><li>Professional Counseling Support</li></ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 5: Model Evaluation -->
+  <div class="slide">
+    <h1>✅ Model Evaluation & Results</h1>
+    <div class="underline"></div>
+    <div class="card" style="margin-bottom:15px;">
+      <h3>📊 Prediction Accuracy</h3>
+      <div class="bar-label"><span>Overall Accuracy</span><b style="color:#8b5cf6;">95%</b></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:95%; background:#22c55e;">95%</div></div>
+      <div class="bar-label"><span>Precision Score</span><b style="color:#8b5cf6;">92%</b></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:92%; background:#22c55e;">92%</div></div>
+      <div class="bar-label"><span>Recall Score</span><b style="color:#8b5cf6;">97%</b></div>
+      <div class="bar-bg"><div class="bar-fill" style="width:97%; background:#22c55e;">97%</div></div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat"><div class="num" style="color:#22c55e;">+0.3</div><div class="label">GPA</div></div>
+      <div class="stat"><div class="num" style="color:#22c55e;">-15%</div><div class="label">Dropout</div></div>
+      <div class="stat"><div class="num" style="color:#22c55e;">+2.1h</div><div class="label">Sleep</div></div>
+      <div class="stat"><div class="num" style="color:#22c55e;">-35%</div><div class="label">Stress</div></div>
+      <div class="stat"><div class="num" style="color:#22c55e;">+12%</div><div class="label">Attendance</div></div>
+    </div>
+  </div>
+
+  <!-- Slide 6: Key Benefits -->
+  <div class="slide">
+    <h1>🌟 Key Benefits & Impact</h1>
+    <div class="underline"></div>
+    <div class="cards" style="margin-bottom:20px;">
+      <div class="card green"><h3>💚 Mental Health</h3><ul><li>Reduced anxiety</li><li>Better sleep</li><li>Improved mood</li></ul></div>
+      <div class="card" style="border-color:#f59e0b;"><h3 style="color:#f59e0b;">📚 Academic Boost</h3><ul><li>Higher GPA</li><li>Better focus</li><li>Time management</li></ul></div>
+      <div class="card purple"><h3>⚡ Early Support</h3><ul><li>Risk detection</li><li>Prevent dropout</li><li>Timely intervention</li></ul></div>
+    </div>
+    <div style="background:linear-gradient(90deg,#4338ca,#8b5cf6); border-radius:12px; padding:20px; color:white;">
+      <h3 style="color:white; margin-bottom:15px;">📊 MEASURABLE IMPACT</h3>
+      <div class="stat-grid">
+        <div class="stat" style="background:rgba(255,255,255,0.15); color:white;"><div class="num">-35%</div><div class="label">Stress</div></div>
+        <div class="stat" style="background:rgba(255,255,255,0.15); color:white;"><div class="num">+0.3</div><div class="label">GPA</div></div>
+        <div class="stat" style="background:rgba(255,255,255,0.15); color:white;"><div class="num">-15%</div><div class="label">Dropout</div></div>
+        <div class="stat" style="background:rgba(255,255,255,0.15); color:white;"><div class="num">+12%</div><div class="label">Attendance</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Slide 7: Complete Cycle -->
+  <div class="slide">
+    <h1>🔄 Complete AI Project Cycle</h1>
+    <div class="underline"></div>
+    <div class="flow">
+      <div class="flow-step" style="border-top-color:#ef4444;">🎯<br><b>1. Problem</b></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-top-color:#f59e0b;">📊<br><b>2. Data</b></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-top-color:#fbbf24;">📈<br><b>3. Analysis</b></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-top-color:#8b5cf6;">🤖<br><b>4. Model</b></div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-top-color:#22c55e;">💡<br><b>5. Prediction</b></div>
+    </div>
+    <div style="background:#ede9fe; border-left:4px solid #8b5cf6; border-radius:8px; padding:20px; margin-top:25px;">
+      <b style="color:#7c3aed;">📋 Step 6: Action & Recommendations</b>
+      <p style="margin-top:8px; color:#555;">Smart Timetable • Break Schedule • Exercise Plan • Counseling</p>
+    </div>
+    <p style="text-align:center; margin-top:20px; color:#7c3aed; font-weight:600;">🔄 Step 7: Evaluate & Improve → Return to Data Collection</p>
+  </div>
+
+  <!-- Slide 8: Continuous Improvement -->
+  <div class="slide">
+    <h1>🔄 Continuous Improvement Plan</h1>
+    <div class="underline"></div>
+    <div class="cards">
+      <div class="card"><h3>Monthly</h3><p>Retraining with fresh data</p></div>
+      <div class="card"><h3>Quarterly</h3><p>User feedback cycles</p></div>
+      <div class="card"><h3>Semi-Annual</h3><p>Model updates</p></div>
+      <div class="card"><h3>Annual</h3><p>Full evaluation & audit</p></div>
+    </div>
+  </div>
+
+  <!-- Slide 9: Viva Q&A -->
+  <div class="slide dark-bg">
+    <h1>❓ Viva Questions & Answers</h1>
+    <div class="underline" style="background:#22c55e;"></div>
+    <div class="qa">
+      <h4>1. What is AI Project Cycle?</h4>
+      <p>A structured 6-step approach: Problem → Data → Exploration → Modeling → Evaluation → Improvement. It's cyclical, repeating for better results.</p>
+    </div>
+    <div class="qa">
+      <h4>2. Why is data important?</h4>
+      <p>Quality data is the foundation of accurate AI models. Garbage in = Garbage out.</p>
+    </div>
+    <div class="qa">
+      <h4>3. What is modelling?</h4>
+      <p>Creating an ML algorithm that learns from historical data to make predictions using Neural Networks, XGBoost, and Decision Trees.</p>
+    </div>
+  </div>
+
+</div>
+
+<button class="nav-btn" id="prevBtn" onclick="changeSlide(-1)">‹</button>
+<button class="nav-btn" id="nextBtn" onclick="changeSlide(1)">›</button>
+<div class="slide-num" id="slideNum">1 / 10</div>
+<div class="dots" id="dots"></div>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const dotsContainer = document.getElementById('dots');
+  slides.forEach((_, i) => {
+    const dot = document.createElement('div');
+    dot.className = 'dot' + (i === 0 ? ' active' : '');
+    dot.onclick = () => goTo(i);
+    dotsContainer.appendChild(dot);
+  });
+
+  function updateUI() {
+    slides.forEach((s, i) => s.classList.toggle('active', i === current));
+    document.querySelectorAll('.dot').forEach((d, i) => d.classList.toggle('active', i === current));
+    document.getElementById('slideNum').textContent = `${current + 1} / ${total}`;
+  }
+
+  function changeSlide(dir) {
+    current = (current + dir + total) % total;
+    updateUI();
+  }
+
+  function goTo(i) { current = i; updateUI(); }
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight') changeSlide(1);
+    if (e.key === 'ArrowLeft') changeSlide(-1);
+  });
+</script>
+
 </body>
 </html>
