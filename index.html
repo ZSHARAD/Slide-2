@@ -1,1 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zsharad | Hot-Dipped Galvanized Steel Doors</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background:#0d0d0d; color:#f5f0e6; line-height:1.6; }
+  a { text-decoration:none; color:inherit; }
 
+  /* Header */
+  header { background:#000; padding:18px 5%; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #d4af37; position:sticky; top:0; z-index:100; }
+  .logo { font-size:1.8rem; font-weight:bold; color:#d4af37; letter-spacing:2px; }
+  nav a { margin-left:25px; color:#f5f0e6; font-weight:500; }
+  nav a:hover { color:#d4af37; }
+
+  /* Hero */
+  .hero { text-align:center; padding:90px 5% 70px; background:linear-gradient(180deg,#111 0%,#0d0d0d 100%); }
+  .hero h1 { font-size:2.6rem; color:#d4af37; margin-bottom:15px; }
+  .hero p { max-width:650px; margin:0 auto 30px; color:#ccc; font-size:1.1rem; }
+  .btn { display:inline-block; background:#d4af37; color:#000; padding:14px 32px; border-radius:6px; font-weight:bold; margin:8px; transition:0.3s; }
+  .btn:hover { background:#f5d76e; }
+  .btn-outline { border:2px solid #d4af37; color:#d4af37; padding:12px 30px; border-radius:6px; margin:8px; display:inline-block; font-weight:bold; }
+  .btn-outline:hover { background:#d4af37; color:#000; }
+
+  /* Section titles */
+  .section { padding:60px 5%; }
+  .section h2 { text-align:center; color:#d4af37; font-size:2rem; margin-bottom:10px; }
+  .section .sub { text-align:center; color:#aaa; margin-bottom:40px; }
+
+  /* Features */
+  .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; }
+  .feature-card { background:#151515; border:1px solid #333; border-radius:10px; padding:28px; text-align:center; transition:0.3s; }
+  .feature-card:hover { border-color:#d4af37; transform:translateY(-5px); }
+  .feature-card .icon { font-size:2rem; color:#d4af37; margin-bottom:12px; }
+  .feature-card h3 { color:#f5f0e6; margin-bottom:8px; }
+  .feature-card p { color:#999; font-size:0.95rem; }
+
+  /* Gallery */
+  .gallery { background:#0a0a0a; }
+  .gallery-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
+  .gallery-item { background:#151515; border:1px solid #333; border-radius:10px; overflow:hidden; text-align:center; }
+  .gallery-item .img-placeholder { height:280px; background:linear-gradient(135deg,#1a1a1a,#000); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:0.9rem; border-bottom:1px solid #333; }
+  .gallery-item p { padding:14px; color:#ccc; font-weight:500; }
+
+  /* Custom design */
+  .custom { background:#111; text-align:center; padding:60px 5%; border-top:2px solid #d4af37; border-bottom:2px solid #d4af37; }
+  .custom h2 { color:#d4af37; font-size:2rem; margin-bottom:15px; }
+  .custom p { max-width:600px; margin:0 auto 25px; color:#ccc; }
+
+  /* Why Hot-Dipped Galvanized */
+  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; }
+  .info-grid ul { list-style:none; }
+  .info-grid li { padding:10px 0; border-bottom:1px solid #222; color:#ddd; }
+  .info-grid li::before { content:"✓ "; color:#d4af37; font-weight:bold; }
+  @media(max-width:768px){ .info-grid{ grid-template-columns:1fr; } }
+
+  /* Contact */
+  .contact { background:#0a0a0a; }
+  .contact-box { max-width:600px; margin:0 auto; background:#151515; border:1px solid #333; border-radius:10px; padding:35px; text-align:center; }
+  .contact-box p { margin:12px 0; font-size:1.05rem; }
+  .contact-box .label { color:#d4af37; font-weight:bold; }
+
+  /* Footer */
+  footer { background:#000; text-align:center; padding:25px 5%; color:#777; border-top:1px solid #222; font-size:0.9rem; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">ZSHARAD</div>
+  <nav>
+    <a href="#gallery">Designs</a>
+    <a href="#custom">Custom Work</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Hot-Dipped Galvanized Steel Doors</h1>
+  <p>Premium, corrosion-resistant steel doors built to last — engineered with hot-dip galvanization for unmatched durability, finished with striking black & gold designer aesthetics.</p>
+  <a href="#gallery" class="btn">View Designs</a>
+  <a href="#contact" class="btn-outline">Get a Quote</a>
+</section>
+
+<section class="section">
+  <h2>Why Choose Zsharad</h2>
+  <p class="sub">Strength, style, and long-term protection in every door</p>
+  <div class="features">
+    <div class="feature-card">
+      <div class="icon">🛡️</div>
+      <h3>Rust & Corrosion Proof</h3>
+      <p>Hot-dip galvanization forms a zinc coating that protects steel for decades, even in harsh weather.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🎨</div>
+      <h3>Designer Finishes</h3>
+      <p>Modern geometric patterns in matte black with brass/gold accents for a premium architectural look.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">🔧</div>
+      <h3>Heavy-Duty Build</h3>
+      <p>Thick-gauge steel frames with reinforced hinges, built for security and daily wear.</p>
+    </div>
+    <div class="feature-card">
+      <div class="icon">✏️</div>
+      <h3>Custom Design</h3>
+      <p>Send us your idea or space — we fabricate doors to your exact size, pattern, and finish.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section gallery" id="gallery">
+  <h2>Our Door Collection</h2>
+  <p class="sub">Handcrafted designs — black steel with gold detailing</p>
+  <div class="gallery-grid">
+    <div class="gallery-item">
+      <div class="img-placeholder">[ Add Photo: Zigzag Louver Design ]</div>
+      <p>Zigzag Louver Door</p>
+    </div>
+    <div class="gallery-item">
+      <div class="img-placeholder">[ Add Photo: Vertical Bar Design ]</div>
+      <p>Vertical Gold Bar Door</p>
+    </div>
+    <div class="gallery-item">
+      <div class="img-placeholder">[ Add Photo: Louver Diagonal Design ]</div>
+      <p>Diagonal Louver Door</p>
+    </div>
+    <div class="gallery-item">
+      <div class="img-placeholder">[ Add Photo: Fan Line Design ]</div>
+      <p>Radial Fan Line Door</p>
+    </div>
+    <div class="gallery-item">
+      <div class="img-placeholder">[ Add Photo: Grid Pattern Design ]</div>
+      <p>Grid & Bars Door</p>
+    </div>
+    <div class="gallery-item">
+      <div class="img-placeholder">[ Add Photo: Geometric Shard Design ]</div>
+      <p>Geometric Shard Door</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="info-grid">
+    <div>
+      <h2 style="text-align:left;">The Hot-Dip Galvanizing Advantage</h2>
+      <p style="color:#aaa; margin-top:10px;">Every Zsharad door is dipped in molten zinc, bonding a protective layer directly to the steel — far stronger than paint or powder coating alone.</p>
+    </div>
+    <ul>
+      <li>25+ years of corrosion resistance</li>
+      <li>Withstands rain, humidity & coastal air</li>
+      <li>No peeling, flaking, or rust bleed</li>
+      <li>Low maintenance, long-term value</li>
+      <li>Eco-friendly & fully recyclable</li>
+    </ul>
+  </div>
+</section>
+
+<section class="custom" id="custom">
+  <h2>Custom Design Work Available</h2>
+  <p>Have a design in mind? Share your size, pattern, or reference image — our team will fabricate a one-of-a-kind galvanized steel door tailored to your home or property.</p>
+  <a href="mailto:sales.zsharad@gmail.com" class="btn">Request Custom Quote</a>
+</section>
+
+<section class="section contact" id="contact">
+  <h2>Get In Touch</h2>
+  <p class="sub">We're happy to help with orders, pricing, and custom designs</p>
+  <div class="contact-box">
+    <p><span class="label">Phone:</span> +91 898 237 9366</p>
+    <p><span class="label">Email:</span> sales.zsharad@gmail.com</p>
+    <p><span class="label">Address:</span> Uslapur, Bilaspur, Chhattisgarh, India – 495001</p>
+  </div>
+</section>
+
+<footer>
+  &copy; 2026 Zsharad. All rights reserved. | Hot-Dipped Galvanized Steel Doors
+</footer>
+
+</body>
+</html>
