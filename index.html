@@ -3,180 +3,244 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zsharad | Hot-Dipped Galvanized Steel Doors</title>
+<title>ZSHARAD | Luxury Hot-Dipped Galvanized Steel Doors</title>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
-  * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family: 'Segoe UI', Arial, sans-serif; background:#0d0d0d; color:#f5f0e6; line-height:1.6; }
-  a { text-decoration:none; color:inherit; }
+:root{
+  --gold:#d4af37; --gold2:#f5d76e; --dark:#070707; --panel:#101010;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Poppins',sans-serif;background:var(--dark);color:#f2ecdd;overflow-x:hidden;}
+a{text-decoration:none;color:inherit;}
 
-  /* Header */
-  header { background:#000; padding:18px 5%; display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #d4af37; position:sticky; top:0; z-index:100; }
-  .logo { font-size:1.8rem; font-weight:bold; color:#d4af37; letter-spacing:2px; }
-  nav a { margin-left:25px; color:#f5f0e6; font-weight:500; }
-  nav a:hover { color:#d4af37; }
+/* ===== Gold particle canvas ===== */
+#particles{position:fixed;inset:0;z-index:0;pointer-events:none;}
 
-  /* Hero */
-  .hero { text-align:center; padding:90px 5% 70px; background:linear-gradient(180deg,#111 0%,#0d0d0d 100%); }
-  .hero h1 { font-size:2.6rem; color:#d4af37; margin-bottom:15px; }
-  .hero p { max-width:650px; margin:0 auto 30px; color:#ccc; font-size:1.1rem; }
-  .btn { display:inline-block; background:#d4af37; color:#000; padding:14px 32px; border-radius:6px; font-weight:bold; margin:8px; transition:0.3s; }
-  .btn:hover { background:#f5d76e; }
-  .btn-outline { border:2px solid #d4af37; color:#d4af37; padding:12px 30px; border-radius:6px; margin:8px; display:inline-block; font-weight:bold; }
-  .btn-outline:hover { background:#d4af37; color:#000; }
+/* ===== Header ===== */
+header{position:fixed;top:0;width:100%;z-index:1000;padding:16px 5%;
+display:flex;justify-content:space-between;align-items:center;
+background:rgba(7,7,7,.55);backdrop-filter:blur(14px);
+border-bottom:1px solid rgba(212,175,55,.25);transition:.4s;}
+header.scrolled{background:rgba(7,7,7,.92);box-shadow:0 8px 30px rgba(0,0,0,.6);}
+.logo{font-family:'Cinzel',serif;font-size:1.7rem;font-weight:800;letter-spacing:4px;
+background:linear-gradient(90deg,#b8860b,var(--gold2),#b8860b);
+background-size:200%;-webkit-background-clip:text;background-clip:text;color:transparent;
+animation:shine 4s linear infinite;}
+@keyframes shine{to{background-position:200%;}}
+nav{display:flex;gap:28px;}
+nav a{position:relative;font-weight:400;font-size:.95rem;color:#ddd;}
+nav a::after{content:'';position:absolute;left:0;bottom:-6px;width:0;height:2px;
+background:linear-gradient(90deg,var(--gold),var(--gold2));transition:.35s;}
+nav a:hover{color:var(--gold2);}
+nav a:hover::after{width:100%;}
 
-  /* Section titles */
-  .section { padding:60px 5%; }
-  .section h2 { text-align:center; color:#d4af37; font-size:2rem; margin-bottom:10px; }
-  .section .sub { text-align:center; color:#aaa; margin-bottom:40px; }
+/* ===== Hero ===== */
+.hero{position:relative;min-height:100vh;display:flex;flex-direction:column;
+justify-content:center;align-items:center;text-align:center;padding:140px 5% 80px;z-index:1;
+background:
+ radial-gradient(ellipse at 20% 30%, rgba(212,175,55,.10), transparent 45%),
+ radial-gradient(ellipse at 80% 70%, rgba(212,175,55,.08), transparent 45%),
+ linear-gradient(180deg,#0b0b0b,#070707);}
+.hero .tag{letter-spacing:6px;font-size:.8rem;color:var(--gold);text-transform:uppercase;
+border:1px solid rgba(212,175,55,.4);padding:8px 22px;border-radius:40px;margin-bottom:26px;
+backdrop-filter:blur(4px);animation:fadeUp 1s .1s both;}
+.hero h1{font-family:'Cinzel',serif;font-size:clamp(2.2rem,6vw,4.5rem);line-height:1.15;
+max-width:900px;animation:fadeUp 1s .3s both;}
+.hero h1 span{background:linear-gradient(90deg,#b8860b,var(--gold2),#e6c34a,#b8860b);
+background-size:250%;-webkit-background-clip:text;background-clip:text;color:transparent;
+animation:shine 5s linear infinite;}
+.hero p{max-width:640px;margin:24px auto 40px;color:#b9b3a2;font-weight:300;
+font-size:1.05rem;animation:fadeUp 1s .5s both;}
+.hero-btns{animation:fadeUp 1s .7s both;}
+.btn{display:inline-block;padding:16px 40px;margin:8px;border-radius:50px;font-weight:600;
+letter-spacing:1px;position:relative;overflow:hidden;transition:.4s;}
+.btn-gold{background:linear-gradient(135deg,#b8860b,var(--gold2));color:#000;
+box-shadow:0 0 25px rgba(212,175,55,.45);}
+.btn-gold:hover{transform:translateY(-4px) scale(1.03);box-shadow:0 0 45px rgba(212,175,55,.8);}
+.btn-ghost{border:1.5px solid var(--gold);color:var(--gold2);backdrop-filter:blur(6px);}
+.btn-ghost:hover{background:rgba(212,175,55,.12);transform:translateY(-4px);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(40px);}to{opacity:1;transform:none;}}
 
-  /* Features */
-  .features { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:25px; }
-  .feature-card { background:#151515; border:1px solid #333; border-radius:10px; padding:28px; text-align:center; transition:0.3s; }
-  .feature-card:hover { border-color:#d4af37; transform:translateY(-5px); }
-  .feature-card .icon { font-size:2rem; color:#d4af37; margin-bottom:12px; }
-  .feature-card h3 { color:#f5f0e6; margin-bottom:8px; }
-  .feature-card p { color:#999; font-size:0.95rem; }
+/* scroll cue */
+.scroll-cue{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+width:26px;height:44px;border:2px solid rgba(212,175,55,.5);border-radius:20px;}
+.scroll-cue::before{content:'';position:absolute;top:8px;left:50%;width:4px;height:9px;
+margin-left:-2px;border-radius:4px;background:var(--gold2);animation:cue 1.8s infinite;}
+@keyframes cue{0%{opacity:1;transform:translateY(0);}100%{opacity:0;transform:translateY(16px);}}
 
-  /* Gallery */
-  .gallery { background:#0a0a0a; }
-  .gallery-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:20px; }
-  .gallery-item { background:#151515; border:1px solid #333; border-radius:10px; overflow:hidden; text-align:center; }
-  .gallery-item .img-placeholder { height:280px; background:linear-gradient(135deg,#1a1a1a,#000); display:flex; align-items:center; justify-content:center; color:#d4af37; font-size:0.9rem; border-bottom:1px solid #333; }
-  .gallery-item p { padding:14px; color:#ccc; font-weight:500; }
+/* ===== Marquee strip ===== */
+.marquee{background:linear-gradient(90deg,#b8860b,var(--gold2),#b8860b);color:#000;
+overflow:hidden;white-space:nowrap;padding:12px 0;font-weight:600;letter-spacing:2px;
+position:relative;z-index:2;}
+.marquee-inner{display:inline-block;animation:scrollX 22s linear infinite;}
+.marquee-inner span{margin:0 34px;}
+@keyframes scrollX{to{transform:translateX(-50%);}}
 
-  /* Custom design */
-  .custom { background:#111; text-align:center; padding:60px 5%; border-top:2px solid #d4af37; border-bottom:2px solid #d4af37; }
-  .custom h2 { color:#d4af37; font-size:2rem; margin-bottom:15px; }
-  .custom p { max-width:600px; margin:0 auto 25px; color:#ccc; }
+/* ===== Sections ===== */
+.section{position:relative;z-index:1;padding:100px 5%;}
+.sec-head{text-align:center;margin-bottom:60px;}
+.sec-head .kicker{color:var(--gold);letter-spacing:5px;font-size:.75rem;text-transform:uppercase;}
+.sec-head h2{font-family:'Cinzel',serif;font-size:clamp(1.8rem,4vw,2.8rem);margin-top:10px;}
+.sec-head .line{width:80px;height:3px;margin:18px auto 0;
+background:linear-gradient(90deg,transparent,var(--gold),transparent);}
 
-  /* Why Hot-Dipped Galvanized */
-  .info-grid { display:grid; grid-template-columns:1fr 1fr; gap:40px; align-items:center; }
-  .info-grid ul { list-style:none; }
-  .info-grid li { padding:10px 0; border-bottom:1px solid #222; color:#ddd; }
-  .info-grid li::before { content:"✓ "; color:#d4af37; font-weight:bold; }
-  @media(max-width:768px){ .info-grid{ grid-template-columns:1fr; } }
+/* reveal on scroll */
+.reveal{opacity:0;transform:translateY(50px);transition:all .9s cubic-bezier(.2,.7,.3,1);}
+.reveal.show{opacity:1;transform:none;}
 
-  /* Contact */
-  .contact { background:#0a0a0a; }
-  .contact-box { max-width:600px; margin:0 auto; background:#151515; border:1px solid #333; border-radius:10px; padding:35px; text-align:center; }
-  .contact-box p { margin:12px 0; font-size:1.05rem; }
-  .contact-box .label { color:#d4af37; font-weight:bold; }
+/* ===== Feature cards (glass + tilt) ===== */
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:26px;}
+.f-card{background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+border:1px solid rgba(212,175,55,.18);border-radius:18px;padding:36px 26px;text-align:center;
+backdrop-filter:blur(10px);transition:.45s;transform-style:preserve-3d;position:relative;overflow:hidden;}
+.f-card::before{content:'';position:absolute;inset:0;
+background:radial-gradient(400px circle at var(--mx,50%) var(--my,50%),rgba(212,175,55,.14),transparent 60%);
+opacity:0;transition:.4s;}
+.f-card:hover::before{opacity:1;}
+.f-card:hover{border-color:rgba(212,175,55,.6);transform:translateY(-10px);
+box-shadow:0 25px 50px rgba(0,0,0,.55),0 0 30px rgba(212,175,55,.12);}
+.f-card .ico{width:70px;height:70px;margin:0 auto 20px;border-radius:50%;
+display:flex;align-items:center;justify-content:center;font-size:1.8rem;
+background:linear-gradient(135deg,rgba(212,175,55,.2),rgba(212,175,55,.05));
+border:1px solid rgba(212,175,55,.4);box-shadow:0 0 20px rgba(212,175,55,.15) inset;}
+.f-card h3{margin-bottom:10px;font-weight:600;color:#fff;}
+.f-card p{font-size:.9rem;color:#a9a493;font-weight:300;}
 
-  /* Footer */
-  footer { background:#000; text-align:center; padding:25px 5%; color:#777; border-top:1px solid #222; font-size:0.9rem; }
+/* ===== Gallery ===== */
+.gal-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:26px;}
+.g-card{position:relative;border-radius:18px;overflow:hidden;height:400px;cursor:pointer;
+border:1px solid rgba(212,175,55,.2);transition:.5s;}
+.g-card .ph{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+color:rgba(212,175,55,.55);font-size:.85rem;letter-spacing:1px;text-align:center;padding:20px;
+background:
+ repeating-linear-gradient(45deg,#0e0e0e 0 14px,#0a0a0a 14px 28px);}
+.g-card::after{content:'';position:absolute;inset:0;
+background:linear-gradient(to top,rgba(0,0,0,.85) 8%,transparent 55%);}
+.g-card .cap{position:absolute;left:0;right:0;bottom:0;padding:22px;z-index:2;
+transform:translateY(12px);transition:.45s;}
+.g-card .cap h3{font-family:'Cinzel',serif;color:var(--gold2);font-size:1.15rem;}
+.g-card .cap p{font-size:.82rem;color:#cfc9b8;font-weight:300;opacity:0;transition:.45s;}
+.g-card:hover{transform:scale(1.03);border-color:var(--gold);
+box-shadow:0 20px 60px rgba(0,0,0,.7),0 0 35px rgba(212,175,55,.18);}
+.g-card:hover .cap{transform:none;}
+.g-card:hover .cap p{opacity:1;}
+.g-card .shineband{position:absolute;top:0;left:-80%;width:50%;height:100%;z-index:3;
+background:linear-gradient(120deg,transparent,rgba(255,255,255,.12),transparent);
+transform:skewX(-20deg);transition:.7s;}
+.g-card:hover .shineband{left:130%;}
+
+/* ===== Stats ===== */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:20px;text-align:center;}
+.stat{padding:34px 10px;border:1px solid rgba(212,175,55,.2);border-radius:16px;
+background:rgba(255,255,255,.02);backdrop-filter:blur(8px);}
+.stat h3{font-family:'Cinzel',serif;font-size:2.4rem;color:var(--gold2);}
+.stat p{color:#a9a493;font-size:.85rem;letter-spacing:1px;margin-top:6px;}
+
+/* ===== Custom CTA ===== */
+.custom{position:relative;text-align:center;padding:110px 5%;overflow:hidden;
+background:
+ radial-gradient(ellipse at 50% 120%, rgba(212,175,55,.18), transparent 60%),#0a0a0a;
+border-top:1px solid rgba(212,175,55,.25);border-bottom:1px solid rgba(212,175,55,.25);}
+.custom h2{font-family:'Cinzel',serif;font-size:clamp(1.8rem,4vw,2.6rem);}
+.custom h2 span{color:var(--gold2);}
+.custom p{max-width:620px;margin:20px auto 36px;color:#b9b3a2;font-weight:300;}
+
+/* ===== Contact ===== */
+.contact-wrap{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;max-width:1000px;margin:0 auto;}
+.c-card{background:linear-gradient(160deg,rgba(255,255,255,.04),rgba(255,255,255,.01));
+border:1px solid rgba(212,175,55,.2);border-radius:18px;padding:36px;text-align:center;
+backdrop-filter:blur(10px);transition:.4s;}
+.c-card:hover{border-color:var(--gold);transform:translateY(-8px);
+box-shadow:0 0 30px rgba(212,175,55,.15);}
+.c-card .ico{font-size:2rem;margin-bottom:14px;}
+.c-card h3{color:var(--gold2);margin-bottom:8px;font-weight:600;}
+.c-card p{color:#cfc9b8;font-size:.92rem;font-weight:300;}
+
+/* ===== Footer ===== */
+footer{position:relative;z-index:1;text-align:center;padding:34px 5%;color:#6f6a5c;
+font-size:.85rem;border-top:1px solid rgba(212,175,55,.15);background:#050505;}
+footer .flogo{font-family:'Cinzel',serif;color:var(--gold);letter-spacing:4px;margin-bottom:8px;font-size:1.1rem;}
+
+/* ===== WhatsApp float ===== */
+.wa{position:fixed;right:22px;bottom:22px;z-index:1200;width:60px;height:60px;border-radius:50%;
+background:#25d366;display:flex;align-items:center;justify-content:center;font-size:1.9rem;
+box-shadow:0 0 0 0 rgba(37,211,102,.6);animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(37,211,102,.55);}70%{box-shadow:0 0 0 22px rgba(37,211,102,0);}100%{box-shadow:0 0 0 0 rgba(37,211,102,0);}}
+
+@media(max-width:640px){nav{display:none;}}
 </style>
 </head>
 <body>
 
-<header>
+<canvas id="particles"></canvas>
+
+<header id="hdr">
   <div class="logo">ZSHARAD</div>
   <nav>
-    <a href="#gallery">Designs</a>
+    <a href="#why">Why Us</a>
+    <a href="#gallery">Collection</a>
     <a href="#custom">Custom Work</a>
     <a href="#contact">Contact</a>
   </nav>
 </header>
 
 <section class="hero">
-  <h1>Hot-Dipped Galvanized Steel Doors</h1>
-  <p>Premium, corrosion-resistant steel doors built to last — engineered with hot-dip galvanization for unmatched durability, finished with striking black & gold designer aesthetics.</p>
-  <a href="#gallery" class="btn">View Designs</a>
-  <a href="#contact" class="btn-outline">Get a Quote</a>
+  <div class="tag">Hot-Dipped Galvanized • Since Bilaspur, C.G.</div>
+  <h1>Forged in Steel.<br><span>Finished in Gold.</span></h1>
+  <p>Luxury hot-dipped galvanized steel doors — engineered to defy rust for decades, designed to turn every entrance into a statement.</p>
+  <div class="hero-btns">
+    <a href="#gallery" class="btn btn-gold">Explore Collection</a>
+    <a href="#contact" class="btn btn-ghost">Get a Quote</a>
+  </div>
+  <div class="scroll-cue"></div>
 </section>
 
-<section class="section">
-  <h2>Why Choose Zsharad</h2>
-  <p class="sub">Strength, style, and long-term protection in every door</p>
+<div class="marquee"><div class="marquee-inner">
+  <span>★ HOT-DIP GALVANIZED</span><span>★ 25+ YEAR RUST PROTECTION</span><span>★ CUSTOM DESIGNS</span><span>★ DESIGNER BLACK & GOLD FINISH</span><span>★ PAN-INDIA DELIVERY</span>
+  <span>★ HOT-DIP GALVANIZED</span><span>★ 25+ YEAR RUST PROTECTION</span><span>★ CUSTOM DESIGNS</span><span>★ DESIGNER BLACK & GOLD FINISH</span><span>★ PAN-INDIA DELIVERY</span>
+</div></div>
+
+<section class="section" id="why">
+  <div class="sec-head reveal">
+    <div class="kicker">The Zsharad Standard</div>
+    <h2>Built Beyond Ordinary</h2>
+    <div class="line"></div>
+  </div>
   <div class="features">
-    <div class="feature-card">
-      <div class="icon">🛡️</div>
-      <h3>Rust & Corrosion Proof</h3>
-      <p>Hot-dip galvanization forms a zinc coating that protects steel for decades, even in harsh weather.</p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">🎨</div>
-      <h3>Designer Finishes</h3>
-      <p>Modern geometric patterns in matte black with brass/gold accents for a premium architectural look.</p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">🔧</div>
-      <h3>Heavy-Duty Build</h3>
-      <p>Thick-gauge steel frames with reinforced hinges, built for security and daily wear.</p>
-    </div>
-    <div class="feature-card">
-      <div class="icon">✏️</div>
-      <h3>Custom Design</h3>
-      <p>Send us your idea or space — we fabricate doors to your exact size, pattern, and finish.</p>
-    </div>
+    <div class="f-card reveal"><div class="ico">🛡️</div><h3>Zinc-Armored Steel</h3><p>Molten zinc bonding shields every inch of steel — no peeling, no rust bleed, ever.</p></div>
+    <div class="f-card reveal"><div class="ico">✨</div><h3>Designer Aesthetics</h3><p>Matte black bodies with hand-finished golden geometry — architecture-grade beauty.</p></div>
+    <div class="f-card reveal"><div class="ico">🔒</div><h3>Fortress Security</h3><p>Heavy-gauge frames, reinforced hinges and premium locking-ready builds.</p></div>
+    <div class="f-card reveal"><div class="ico">📐</div><h3>Made to Measure</h3><p>Every door fabricated to your exact opening, pattern, and hardware preference.</p></div>
   </div>
 </section>
 
-<section class="section gallery" id="gallery">
-  <h2>Our Door Collection</h2>
-  <p class="sub">Handcrafted designs — black steel with gold detailing</p>
-  <div class="gallery-grid">
-    <div class="gallery-item">
-      <div class="img-placeholder">[ Add Photo: Zigzag Louver Design ]</div>
-      <p>Zigzag Louver Door</p>
-    </div>
-    <div class="gallery-item">
-      <div class="img-placeholder">[ Add Photo: Vertical Bar Design ]</div>
-      <p>Vertical Gold Bar Door</p>
-    </div>
-    <div class="gallery-item">
-      <div class="img-placeholder">[ Add Photo: Louver Diagonal Design ]</div>
-      <p>Diagonal Louver Door</p>
-    </div>
-    <div class="gallery-item">
-      <div class="img-placeholder">[ Add Photo: Fan Line Design ]</div>
-      <p>Radial Fan Line Door</p>
-    </div>
-    <div class="gallery-item">
-      <div class="img-placeholder">[ Add Photo: Grid Pattern Design ]</div>
-      <p>Grid & Bars Door</p>
-    </div>
-    <div class="gallery-item">
-      <div class="img-placeholder">[ Add Photo: Geometric Shard Design ]</div>
-      <p>Geometric Shard Door</p>
-    </div>
+<section class="section" id="gallery" style="background:#080808;">
+  <div class="sec-head reveal">
+    <div class="kicker">Signature Collection</div>
+    <h2>Doors That Command Attention</h2>
+    <div class="line"></div>
+  </div>
+  <div class="gal-grid">
+    <div class="g-card reveal"><div class="ph">[ Replace with photo — Zigzag Louver ]</div><div class="shineband"></div><div class="cap"><h3>Zigzag Louver</h3><p>Bold crossing gold lines over horizontal louvers.</p></div></div>
+    <div class="g-card reveal"><div class="ph">[ Replace with photo — Golden Bars ]</div><div class="shineband"></div><div class="cap"><h3>Golden Bars</h3><p>Vertical brass rods in a rhythmic skyline pattern.</p></div></div>
+    <div class="g-card reveal"><div class="ph">[ Replace with photo — Diagonal Cut ]</div><div class="shineband"></div><div class="cap"><h3>Diagonal Cut</h3><p>Sharp K-angle geometry over fine vertical fluting.</p></div></div>
+    <div class="g-card reveal"><div class="ph">[ Replace with photo — Shard Mosaic ]</div><div class="shineband"></div><div class="cap"><h3>Shard Mosaic</h3><p>Fragmented planes outlined in radiant gold.</p></div></div>
+    <div class="g-card reveal"><div class="ph">[ Replace with photo — Grid Luxe ]</div><div class="shineband"></div><div class="cap"><h3>Grid Luxe</h3><p>Minimal cage grid with fine golden inlays.</p></div></div>
+    <div class="g-card reveal"><div class="ph">[ Replace with photo — Crescent Fan ]</div><div class="shineband"></div><div class="cap"><h3>Crescent Fan</h3><p>Sweeping golden arc with layered fins.</p></div></div>
   </div>
 </section>
 
 <section class="section">
-  <div class="info-grid">
-    <div>
-      <h2 style="text-align:left;">The Hot-Dip Galvanizing Advantage</h2>
-      <p style="color:#aaa; margin-top:10px;">Every Zsharad door is dipped in molten zinc, bonding a protective layer directly to the steel — far stronger than paint or powder coating alone.</p>
-    </div>
-    <ul>
-      <li>25+ years of corrosion resistance</li>
-      <li>Withstands rain, humidity & coastal air</li>
-      <li>No peeling, flaking, or rust bleed</li>
-      <li>Low maintenance, long-term value</li>
-      <li>Eco-friendly & fully recyclable</li>
-    </ul>
+  <div class="stats">
+    <div class="stat reveal"><h3 data-count="25">0</h3><p>YEARS RUST PROTECTION</p></div>
+    <div class="stat reveal"><h3 data-count="500">0</h3><p>DOORS DELIVERED</p></div>
+    <div class="stat reveal"><h3 data-count="50">0</h3><p>SIGNATURE DESIGNS</p></div>
+    <div class="stat reveal"><h3 data-count="100">0</h3><p>% CUSTOMIZABLE</p></div>
   </div>
 </section>
 
 <section class="custom" id="custom">
-  <h2>Custom Design Work Available</h2>
-  <p>Have a design in mind? Share your size, pattern, or reference image — our team will fabricate a one-of-a-kind galvanized steel door tailored to your home or property.</p>
-  <a href="mailto:sales.zsharad@gmail.com" class="btn">Request Custom Quote</a>
-</section>
-
-<section class="section contact" id="contact">
-  <h2>Get In Touch</h2>
-  <p class="sub">We're happy to help with orders, pricing, and custom designs</p>
-  <div class="contact-box">
-    <p><span class="label">Phone:</span> +91 898 237 9366</p>
-    <p><span class="label">Email:</span> sales.zsharad@gmail.com</p>
-    <p><span class="label">Address:</span> Uslapur, Bilaspur, Chhattisgarh, India – 495001</p>
-  </div>
-</section>
-
-<footer>
-  &copy; 2026 Zsharad. All rights reserved. | Hot-Dipped Galvanized Steel Doors
-</footer>
-
-</body>
-</html>
+  <h2 class="reveal">Dream It. <span>We Forge It.</span></h2>
+  <p class="reveal">Custom design work available — send your size, sketch, or reference photo and our craftsmen will fabricate a one-of-a-kind galvanized masterpiece for your entrance.</p>
+  <a href="mailto:
